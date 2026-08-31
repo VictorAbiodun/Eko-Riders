@@ -15,6 +15,8 @@ interface ResponsiveShellProps {
   tabs: TabItem[]
   activeTab: string
   onTabChange: (tabId: string) => void
+  /** Which tab gets the elevated center FAB treatment on mobile */
+  centerTabId?: string
   children: ReactNode
   
   // Sidebar specific
@@ -32,6 +34,7 @@ export function ResponsiveShell({
   tabs,
   activeTab,
   onTabChange,
+  centerTabId,
   children,
   sidebarHeader,
   sidebarFooter,
@@ -137,7 +140,7 @@ export function ResponsiveShell({
 
         {/* Mobile Tab Bar */}
         <div className="md:hidden">
-          <TabBar tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} />
+          <TabBar tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} centerTabId={centerTabId} />
         </div>
       </div>
       

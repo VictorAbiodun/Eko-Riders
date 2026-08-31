@@ -75,6 +75,7 @@ export function SellerApp() {
         setSelectedOrderId(null)
         setActiveTab(id)
       }}
+      centerTabId="create"
       sidebarFooter={sidebarFooter}
       showBack={!!selectedOrderId}
       onBack={() => setSelectedOrderId(null)}

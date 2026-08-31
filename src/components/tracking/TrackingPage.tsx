@@ -1,10 +1,11 @@
 import { AlertTriangle, RotateCcw, Package } from 'lucide-react'
-import { mockOrders, mockRiders } from '../../data/mockData'
+import { useAppData } from '../../context/AppContext'
 import type { OrderStatus } from '../../data/types'
-import { StatusBadge } from '../ui/StatusBadge'
-import { TrackingStepper } from './TrackingStepper'
+import { MapGraphic } from '../ui/MapGraphic'
+import { TrackingStepper } from '../orders/TrackingStepper'
 import { RiderCard } from './RiderCard'
 import { OrderSummaryCard } from './OrderSummaryCard'
+import { EmptyState } from '../ui/EmptyState'
 
 /* ─── Demo order links ─── */
 
@@ -52,7 +53,9 @@ function getEstimatedArrival(
 
 function TrackingHeader() {
   return (
-    <header className="border-b border-neutral-200 bg-white px-5 py-4">
+    <header className="bg-white px-5 py-4" style={{
+      boxShadow: '0 1px 8px -2px rgba(30, 28, 26, 0.06)',
+    }}>
       <div className="flex items-center gap-2">
         <div className="flex h-7 w-7 items-center justify-center rounded-md bg-brand">
           <Package className="h-4 w-4 text-white" strokeWidth={2.5} />
@@ -70,7 +73,7 @@ function FailedStatusCard({ status }: { status: OrderStatus }) {
 
   return (
     <div
-      className={`mx-5 mt-5 rounded-xl border p-5 ${
+      className={`mx-5 mt-5 rounded-2xl border p-5 ${
         isFailed
           ? 'border-status-danger-border bg-status-danger-bg'
           : 'border-status-warning-border bg-status-warning-bg'
@@ -79,7 +82,7 @@ function FailedStatusCard({ status }: { status: OrderStatus }) {
       <div className="flex items-start gap-3">
         <div
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-            isFailed ? 'bg-red-100' : 'bg-amber-100'
+            isFailed ? 'bg-status-danger-bg' : 'bg-status-warning-bg'
           }`}
         >
           {isFailed ? (
@@ -115,19 +118,10 @@ function FailedStatusCard({ status }: { status: OrderStatus }) {
 
 function OrderNotFound({ orderId }: { orderId: string }) {
   return (
-    <div className="flex flex-col items-center px-6 py-20 text-center">
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-neutral-100">
-        <Package className="h-7 w-7 text-neutral-400" strokeWidth={1.75} />
-      </div>
-      <h2 className="font-heading text-lg font-bold text-ink">
-        Order not found
-      </h2>
-      <p className="mt-1 max-w-[260px] text-sm text-neutral-500">
-        We couldn't find an order with ID{' '}
-        <span className="font-data font-semibold text-ink">{orderId}</span>.
-        Please check the link and try again.
-      </p>
-    </div>
+    <EmptyState
+      title="Order not found"
+      description={`We couldn't find an order with ID ${orderId}. Please check the link and try again.`}
+    />
   )
 }
 
@@ -147,7 +141,7 @@ function TrackingFooter() {
 
 function DemoNav({ currentId }: { currentId: string }) {
   return (
-    <div className="mx-5 mt-6 rounded-xl border border-dashed border-neutral-300 bg-neutral-50 p-4">
+    <div className="mx-5 mt-6 rounded-2xl border border-dashed border-neutral-300 bg-neutral-50 p-4">
       <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-neutral-400">
         Demo — try other orders
       </p>
@@ -180,7 +174,8 @@ interface TrackingPageProps {
 }
 
 export function TrackingPage({ orderId }: TrackingPageProps) {
-  const order = mockOrders.find((o) => o.id === orderId)
+  const { orders, riders } = useAppData()
+  const order = orders.find((o) => o.id === orderId)
 
   const isTerminal = order
     ? TERMINAL_STATUSES.includes(order.status)
@@ -188,7 +183,7 @@ export function TrackingPage({ orderId }: TrackingPageProps) {
 
   const rider =
     order?.riderName
-      ? mockRiders.find((r) => r.name === order.riderName) ?? null
+      ? riders.find((r) => r.name === order.riderName) ?? null
       : null
 
   const showRider =
@@ -211,15 +206,19 @@ export function TrackingPage({ orderId }: TrackingPageProps) {
           </>
         ) : (
           <>
-            {/* ── Order ID hero ── */}
-            <div className="px-5 pt-6 pb-2">
-              <p className="text-sm text-neutral-500">Tracking order</p>
-              <div className="mt-1 flex items-center gap-3">
-                <h1 className="font-data text-2xl font-bold tabular-nums tracking-tight text-ink">
-                  {order.id}
-                </h1>
-                <StatusBadge status={order.status} />
-              </div>
+            {/* ── Map card ── */}
+            <div className="px-5 pt-5">
+              <MapGraphic status={order.status} className="h-[180px]" />
+            </div>
+
+            {/* ── Order ID hero (centered) ── */}
+            <div className="px-5 pt-5 text-center">
+              <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                Order ID
+              </p>
+              <h1 className="mt-1 font-data text-2xl font-bold tabular-nums tracking-tight text-ink">
+                {order.id}
+              </h1>
               <p className="mt-1.5 text-sm text-neutral-500">
                 {order.customerName} · {order.sellerName}
               </p>

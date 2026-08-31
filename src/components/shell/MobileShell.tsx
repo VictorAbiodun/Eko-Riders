@@ -14,10 +14,12 @@ interface MobileShellProps {
   tabs: TabItem[]
   activeTab: string
   onTabChange: (tabId: string) => void
+  /** Which tab gets the elevated center FAB treatment */
+  centerTabId?: string
   children: ReactNode
 }
 
-const TAB_BAR_HEIGHT = 56
+const TAB_BAR_HEIGHT = 72 // Taller to accommodate the elevated FAB
 
 export function MobileShell({
   title,
@@ -27,6 +29,7 @@ export function MobileShell({
   tabs,
   activeTab,
   onTabChange,
+  centerTabId,
   children,
 }: MobileShellProps) {
   return (
@@ -47,7 +50,12 @@ export function MobileShell({
         {children}
       </main>
 
-      <TabBar tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} />
+      <TabBar
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={onTabChange}
+        centerTabId={centerTabId}
+      />
     </div>
   )
 }

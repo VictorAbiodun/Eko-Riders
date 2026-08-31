@@ -1,8 +1,9 @@
 import { formatNaira } from '../../data/mockData'
 import type { Seller } from '../../data/types'
 import { useAppData } from '../../context/AppContext'
-import { ChevronRight, PlusCircle, TrendingUp, Package, MapPin } from 'lucide-react'
-import { StatusBadge } from '../ui/StatusBadge'
+import { PlusCircle, TrendingUp } from 'lucide-react'
+import { EmptyState } from '../ui/EmptyState'
+import { OrderListRow } from '../orders/OrderListRow'
 
 interface SellerHomeProps {
   seller: Seller
@@ -17,7 +18,7 @@ export function SellerHome({
 }: SellerHomeProps) {
   const { orders } = useAppData()
   
-  const sellerOrders = orders.filter((o) => o.sellerName === seller.name)
+  const sellerOrders = orders.filter((o) => o.sellerName === seller.businessName)
   const sortedOrders = [...sellerOrders].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   )
@@ -103,7 +104,7 @@ export function SellerHome({
               </p>
             </div>
             <div className="rounded-xl border border-neutral-200 bg-white p-3 text-center">
-              <p className="text-xs font-medium uppercase tracking-wide text-status-error">
+              <p className="text-xs font-medium uppercase tracking-wide text-status-danger">
                 Returns
               </p>
               <p className="mt-1 font-data text-2xl font-bold text-ink">
@@ -118,40 +119,22 @@ export function SellerHome({
               <h2 className="text-sm font-bold text-ink">Recent Orders</h2>
             </div>
             {recentOrders.length === 0 ? (
-              <div className="p-8 text-center text-sm text-neutral-500">
-                No orders yet.
-              </div>
+              <EmptyState
+                title="No orders yet"
+                description="Create your first delivery to see it here."
+                actionLabel="Create order"
+                onAction={onNavigateToCreate}
+              />
             ) : (
               <ul className="divide-y divide-neutral-100">
                 {recentOrders.map((order) => (
-                  <li key={order.id}>
-                    <button
-                      type="button"
-                      onClick={() => onSelectOrder(order.id)}
-                      className="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-neutral-50"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-100 text-neutral-500">
-                          <Package className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <p className="font-data text-sm font-bold text-ink">
-                            {order.id}
-                          </p>
-                          <div className="mt-1 flex items-center gap-1 text-xs text-neutral-500">
-                            <MapPin className="h-3 w-3" />
-                            <span className="truncate max-w-[120px] sm:max-w-none">
-                              {order.customerName} &middot; {order.customerAddress.split(',')[0]}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end gap-2">
-                        <StatusBadge status={order.status} />
-                        <ChevronRight className="h-4 w-4 text-neutral-300" />
-                      </div>
-                    </button>
-                  </li>
+                  <OrderListRow
+                    key={order.id}
+                    order={order}
+                    pickupLabel={seller.area}
+                    onClick={() => onSelectOrder(order.id)}
+                    meta={order.customerName}
+                  />
                 ))}
               </ul>
             )}

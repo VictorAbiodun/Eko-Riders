@@ -304,3 +304,11 @@ export function formatNaira(amount: number): string {
     maximumFractionDigits: 0,
   }).format(amount)
 }
+
+export function nextOrderId(existingIds: string[]): string {
+  const nums = existingIds
+    .map((id) => parseInt(id.replace(/^ORD-/, ''), 10))
+    .filter((n) => !Number.isNaN(n))
+  const next = (nums.length ? Math.max(...nums) : 0) + 1
+  return `ORD-${String(next).padStart(6, '0')}`
+}

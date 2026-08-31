@@ -67,9 +67,9 @@ const config: Config = {
             border: '#E8E8E8',
           },
           info: {
-            DEFAULT: '#1D4ED8',
-            bg: '#EFF6FF',
-            border: '#BFDBFE',
+            DEFAULT: '#59788E',
+            bg: '#E3EAF0',
+            border: '#C7D4DF',
           },
           success: {
             DEFAULT: '#15803D',

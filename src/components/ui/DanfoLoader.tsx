@@ -10,7 +10,8 @@ interface DanfoLoaderProps {
 }
 
 /**
- * A shared loading transition screen featuring an idling danfo bus.
+ * A shared loading transition screen featuring an okada delivery bike
+ * in danfo livery — mustard yellow body with charcoal stripe accents.
  *
  * Usage:
  * ```tsx
@@ -48,100 +49,167 @@ export function DanfoLoader({
         animation: fadingOut ? 'loader-fade-out 280ms ease-out forwards' : undefined,
       }}
     >
-      {/* Danfo illustration with idle bob */}
+      {/* Okada delivery bike with gentle suspension bob */}
       <div
-        style={{ animation: 'danfo-idle 1.2s ease-in-out infinite' }}
+        style={{ animation: 'okada-bob 0.8s ease-in-out infinite' }}
       >
         <svg
           width="180"
-          height="120"
-          viewBox="0 0 240 160"
+          height="130"
+          viewBox="0 0 280 180"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
           {/* ── Ground shadow ── */}
-          <ellipse cx="130" cy="138" rx="80" ry="6" fill="#1E1C1A" opacity="0.08" />
+          <ellipse cx="150" cy="160" rx="90" ry="5" fill="#1E1C1A" opacity="0.07" />
 
-          {/* ── Bus body ── */}
-          {/* Main body shape — rounded top like the VW-style danfo */}
+          {/* ── Rear wheel ── */}
+          <circle cx="80" cy="138" r="22" fill="#1E1C1A" />
+          <circle cx="80" cy="138" r="16" fill="#3F3937" />
+          <circle cx="80" cy="138" r="10" fill="#1E1C1A" />
+          <circle cx="80" cy="138" r="4" fill="#FCFAEE" />
+          {/* Spokes hint */}
+          <line x1="80" y1="122" x2="80" y2="128" stroke="#5D5753" strokeWidth="1.5" />
+          <line x1="66" y1="132" x2="71" y2="135" stroke="#5D5753" strokeWidth="1.5" />
+          <line x1="94" y1="132" x2="89" y2="135" stroke="#5D5753" strokeWidth="1.5" />
+          <line x1="72" y1="150" x2="76" y2="146" stroke="#5D5753" strokeWidth="1.5" />
+          <line x1="88" y1="150" x2="84" y2="146" stroke="#5D5753" strokeWidth="1.5" />
+
+          {/* ── Front wheel ── */}
+          <circle cx="210" cy="138" r="22" fill="#1E1C1A" />
+          <circle cx="210" cy="138" r="16" fill="#3F3937" />
+          <circle cx="210" cy="138" r="10" fill="#1E1C1A" />
+          <circle cx="210" cy="138" r="4" fill="#FCFAEE" />
+          {/* Spokes hint */}
+          <line x1="210" y1="122" x2="210" y2="128" stroke="#5D5753" strokeWidth="1.5" />
+          <line x1="196" y1="132" x2="201" y2="135" stroke="#5D5753" strokeWidth="1.5" />
+          <line x1="224" y1="132" x2="219" y2="135" stroke="#5D5753" strokeWidth="1.5" />
+          <line x1="202" y1="150" x2="206" y2="146" stroke="#5D5753" strokeWidth="1.5" />
+          <line x1="218" y1="150" x2="214" y2="146" stroke="#5D5753" strokeWidth="1.5" />
+
+          {/* ── Chain / lower frame ── */}
+          <line x1="80" y1="138" x2="145" y2="120" stroke="#1E1C1A" strokeWidth="3" strokeLinecap="round" />
+
+          {/* ── Rear swingarm ── */}
+          <line x1="80" y1="138" x2="140" y2="110" stroke="#3F3937" strokeWidth="4" strokeLinecap="round" />
+
+          {/* ── Frame backbone ── */}
           <path
-            d="M40 68C40 48 50 36 68 36H192C208 36 218 48 218 68V118C218 124 214 128 208 128H52C46 128 40 124 40 118V68Z"
+            d="M140 110L155 70L200 90L210 138"
+            stroke="#1E1C1A"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+          {/* Down tube */}
+          <line x1="140" y1="110" x2="145" y2="126" stroke="#1E1C1A" strokeWidth="3.5" strokeLinecap="round" />
+
+          {/* ── Engine block (simplified rectangle) ── */}
+          <rect x="125" y="108" width="30" height="20" rx="4" fill="#3F3937" />
+          <rect x="128" y="111" width="8" height="6" rx="1" fill="#1E1C1A" />
+          {/* Exhaust pipe */}
+          <path
+            d="M80 135L100 130L120 125"
+            stroke="#5D5753"
+            strokeWidth="3"
+            strokeLinecap="round"
+            fill="none"
+          />
+
+          {/* ── Fuel tank — mustard yellow with charcoal stripe ── */}
+          <path
+            d="M140 80C140 74 144 70 150 68L175 64C180 63 185 66 185 72V86C185 90 181 93 177 93H148C143 93 140 89 140 85V80Z"
             fill="#D99F16"
           />
-
-          {/* Roof highlight — slightly lighter yellow strip across the top */}
+          {/* Danfo stripe on tank */}
+          <rect x="142" y="79" width="41" height="5" rx="1" fill="#1E1C1A" />
+          {/* Second thinner stripe */}
+          <rect x="142" y="87" width="41" height="3" rx="1" fill="#1E1C1A" />
+          {/* Tank highlight */}
           <path
-            d="M50 50C50 42 58 36 68 36H192C202 36 210 42 210 50V52H50V50Z"
+            d="M152 70L156 69V76L152 77V70Z"
             fill="#E9B855"
+            opacity="0.6"
           />
 
-          {/* ── Black stripes (the signature danfo lines) ── */}
-          <rect x="40" y="92" width="178" height="7" rx="1" fill="#1E1C1A" />
-          <rect x="40" y="103" width="178" height="4" rx="1" fill="#1E1C1A" />
-
-          {/* ── Rear panel ── */}
-          <path d="M40 70H46V128H40V70Z" fill="#B88510" />
-          {/* Tail light */}
-          <rect x="40" y="110" width="6" height="10" rx="1" fill="#C0392B" />
-
-          {/* ── Windows (teal, like the reference) ── */}
-          {/* Window 1 */}
-          <rect x="60" y="48" width="28" height="30" rx="3" fill="#59788E" />
-          {/* Window 2 */}
-          <rect x="94" y="48" width="28" height="30" rx="3" fill="#59788E" />
-          {/* Window 3 */}
-          <rect x="128" y="48" width="28" height="30" rx="3" fill="#59788E" />
-
-          {/* Window reflections */}
-          <line x1="68" y1="50" x2="64" y2="72" stroke="#FCFAEE" strokeWidth="2" opacity="0.25" />
-          <line x1="102" y1="50" x2="98" y2="72" stroke="#FCFAEE" strokeWidth="2" opacity="0.25" />
-          <line x1="136" y1="50" x2="132" y2="72" stroke="#FCFAEE" strokeWidth="2" opacity="0.25" />
-
-          {/* ── Front windshield ── */}
+          {/* ── Fairing / side panel — mustard yellow ── */}
           <path
-            d="M162 48H204C210 48 215 52 216 58L218 76C218 78 216 80 214 80H162V48Z"
-            fill="#59788E"
+            d="M155 93H177C179 93 180 95 180 97V108C180 110 178 112 176 112H150C148 112 146 110 147 108L150 95C150 94 152 93 155 93Z"
+            fill="#D99F16"
           />
-          <line x1="172" y1="50" x2="167" y2="76" stroke="#FCFAEE" strokeWidth="2" opacity="0.25" />
+          {/* Fairing stripe */}
+          <rect x="149" y="100" width="30" height="4" rx="1" fill="#1E1C1A" />
 
-          {/* ── Front bumper / grill area ── */}
+          {/* ── Seat ── */}
           <path
-            d="M212 90H222C224 90 226 92 226 94V120C226 124 222 128 218 128H212V90Z"
+            d="M120 72C120 68 124 65 128 65H150C154 65 158 68 158 72V75C158 78 155 80 152 80H124C121 80 120 78 120 75V72Z"
             fill="#1E1C1A"
           />
-          {/* Headlight */}
-          <rect x="218" y="94" width="6" height="8" rx="2" fill="#FCFAEE" />
+          {/* Seat cushion top */}
+          <rect x="123" y="66" width="32" height="4" rx="2" fill="#3F3937" />
 
-          {/* ── Rear vents (horizontal lines on the back) ── */}
-          <line x1="46" y1="56" x2="54" y2="56" stroke="#1E1C1A" strokeWidth="2" />
-          <line x1="46" y1="60" x2="54" y2="60" stroke="#1E1C1A" strokeWidth="2" />
-          <line x1="46" y1="64" x2="54" y2="64" stroke="#1E1C1A" strokeWidth="2" />
-          <line x1="46" y1="68" x2="54" y2="68" stroke="#1E1C1A" strokeWidth="2" />
+          {/* ── Front fork ── */}
+          <line x1="200" y1="90" x2="210" y2="138" stroke="#5D5753" strokeWidth="4" strokeLinecap="round" />
+          <line x1="195" y1="90" x2="206" y2="138" stroke="#5D5753" strokeWidth="3" strokeLinecap="round" />
 
-          {/* ── Front grill lines ── */}
-          <line x1="218" y1="108" x2="224" y2="108" stroke="#3F3937" strokeWidth="1.5" />
-          <line x1="218" y1="112" x2="224" y2="112" stroke="#3F3937" strokeWidth="1.5" />
-          <line x1="218" y1="116" x2="224" y2="116" stroke="#3F3937" strokeWidth="1.5" />
+          {/* ── Handlebars ── */}
+          <line x1="185" y1="64" x2="205" y2="60" stroke="#1E1C1A" strokeWidth="3.5" strokeLinecap="round" />
+          {/* Left grip */}
+          <rect x="180" y="61" width="8" height="6" rx="3" fill="#3F3937" />
+          {/* Right grip */}
+          <rect x="203" y="57" width="8" height="6" rx="3" fill="#3F3937" />
+          {/* Mirror (left) */}
+          <circle cx="182" cy="59" r="3.5" fill="#1E1C1A" />
+          <circle cx="182" cy="59" r="2" fill="#59788E" />
 
-          {/* ── Wheels ── */}
-          {/* Rear wheel */}
-          <circle cx="80" cy="128" r="14" fill="#1E1C1A" />
-          <circle cx="80" cy="128" r="8" fill="#3F3937" />
-          <circle cx="80" cy="128" r="4" fill="#FCFAEE" />
+          {/* ── Headlight ── */}
+          <circle cx="215" cy="86" r="7" fill="#1E1C1A" />
+          <circle cx="215" cy="86" r="5" fill="#FCFAEE" />
+          {/* Teal accent reflection */}
+          <circle cx="216" cy="85" r="2.5" fill="#59788E" opacity="0.4" />
 
-          {/* Front wheel */}
-          <circle cx="185" cy="128" r="14" fill="#1E1C1A" />
-          <circle cx="185" cy="128" r="8" fill="#3F3937" />
-          <circle cx="185" cy="128" r="4" fill="#FCFAEE" />
+          {/* ── Rear mudguard ── */}
+          <path
+            d="M60 128C60 120 68 116 80 116C92 116 96 120 96 124"
+            stroke="#1E1C1A"
+            strokeWidth="3"
+            fill="none"
+          />
 
-          {/* ── Speed lines (behind the bus) ── */}
-          <line x1="10" y1="100" x2="32" y2="100" stroke="#1E1C1A" strokeWidth="3" strokeLinecap="round" opacity="0.2" />
-          <line x1="16" y1="110" x2="36" y2="110" stroke="#1E1C1A" strokeWidth="2.5" strokeLinecap="round" opacity="0.15" />
-          <line x1="20" y1="120" x2="38" y2="120" stroke="#1E1C1A" strokeWidth="2" strokeLinecap="round" opacity="0.1" />
+          {/* ── Front mudguard ── */}
+          <path
+            d="M194 128C194 120 200 116 210 116C220 116 226 120 226 124"
+            stroke="#1E1C1A"
+            strokeWidth="3"
+            fill="none"
+          />
+
+          {/* ── Tail light ── */}
+          <rect x="110" y="76" width="6" height="4" rx="2" fill="#C0392B" />
+
+          {/* ── Delivery box on the back — mustard with charcoal edge ── */}
+          <rect x="88" y="52" width="32" height="24" rx="3" fill="#D99F16" />
+          {/* Box charcoal stripe */}
+          <rect x="88" y="62" width="32" height="4" rx="1" fill="#1E1C1A" />
+          {/* Box latch */}
+          <rect x="101" y="54" width="6" height="3" rx="1" fill="#1E1C1A" />
+          {/* Box side highlight */}
+          <rect x="91" y="55" width="3" height="6" rx="1" fill="#E9B855" opacity="0.5" />
+
+          {/* ── Rack / carrier under the box ── */}
+          <line x1="90" y1="76" x2="118" y2="76" stroke="#3F3937" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="92" y1="76" x2="95" y2="80" stroke="#3F3937" strokeWidth="2" strokeLinecap="round" />
+          <line x1="116" y1="76" x2="113" y2="80" stroke="#3F3937" strokeWidth="2" strokeLinecap="round" />
+
+          {/* ── Speed lines (behind the bike, subtle) ── */}
+          <line x1="20" y1="108" x2="46" y2="108" stroke="#1E1C1A" strokeWidth="2.5" strokeLinecap="round" opacity="0.15" />
+          <line x1="28" y1="118" x2="50" y2="118" stroke="#1E1C1A" strokeWidth="2" strokeLinecap="round" opacity="0.10" />
+          <line x1="34" y1="128" x2="52" y2="128" stroke="#1E1C1A" strokeWidth="1.5" strokeLinecap="round" opacity="0.07" />
 
           {/* ── Ground line ── */}
-          <line x1="50" y1="142" x2="220" y2="142" stroke="#1E1C1A" strokeWidth="2.5" strokeLinecap="round" opacity="0.15" />
+          <line x1="50" y1="160" x2="250" y2="160" stroke="#1E1C1A" strokeWidth="2" strokeLinecap="round" opacity="0.12" />
         </svg>
       </div>
 

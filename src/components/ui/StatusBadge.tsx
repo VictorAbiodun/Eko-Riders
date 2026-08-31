@@ -1,22 +1,36 @@
 import type { OrderStatus } from '../../data/types'
-import { ORDER_STATUS_LABELS, ORDER_STATUS_SEMANTIC } from '../../data/types'
+import { ORDER_STATUS_LABELS } from '../../data/types'
 
-export const STATUS_BADGE_CLASSES: Record<
-  'pending' | 'info' | 'success' | 'danger' | 'warning',
-  string
-> = {
-  pending: 'text-status-pending bg-status-pending-bg border-status-pending-border',
-  info: 'text-status-info bg-status-info-bg border-status-info-border',
-  success: 'text-status-success bg-status-success-bg border-status-success-border',
-  danger: 'text-status-danger bg-status-danger-bg border-status-danger-border',
-  warning: 'text-status-warning bg-status-warning-bg border-status-warning-border',
+/**
+ * Pixel-identical status pills everywhere.
+ * Each order status maps to one token — never ad-hoc blues/grays.
+ */
+export const STATUS_BADGE_CLASSES: Record<OrderStatus, string> = {
+  NEW: 'bg-status-pending text-white',
+  CONFIRMED: 'bg-status-pending text-white',
+  ASSIGNED: 'bg-accent text-white',
+  PICKED_UP: 'bg-accent-700 text-white',
+  OUT_FOR_DELIVERY: 'bg-brand text-ink',
+  DELIVERED: 'bg-status-success text-white',
+  FAILED: 'bg-status-danger text-white',
+  RETURNED: 'bg-status-warning text-white',
 }
 
-export function StatusBadge({ status }: { status: OrderStatus }) {
-  const semantic = ORDER_STATUS_SEMANTIC[status]
+const BADGE_SHAPE =
+  'inline-flex shrink-0 items-center rounded-full px-3 py-1 text-xs font-bold leading-none'
+
+interface StatusBadgeProps {
+  status: OrderStatus
+  /** Inverse pill for mustard hero cards */
+  inverse?: boolean
+}
+
+export function StatusBadge({ status, inverse }: StatusBadgeProps) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center rounded-full border px-2 py-0.5 text-xs font-semibold leading-none ${STATUS_BADGE_CLASSES[semantic]}`}
+      className={`${BADGE_SHAPE} ${
+        inverse ? 'bg-white/20 text-white' : STATUS_BADGE_CLASSES[status]
+      }`}
     >
       {ORDER_STATUS_LABELS[status]}
     </span>

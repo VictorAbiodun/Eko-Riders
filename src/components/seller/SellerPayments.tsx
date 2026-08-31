@@ -10,7 +10,7 @@ interface SellerPaymentsProps {
 export function SellerPayments({ seller }: SellerPaymentsProps) {
   const { orders } = useAppData()
 
-  const sellerOrders = orders.filter((o) => o.sellerName === seller.name)
+  const sellerOrders = orders.filter((o) => o.sellerName === seller.businessName)
 
   const pendingSettlement = sellerOrders
     .filter((o) => o.codAmount > 0 && o.status !== 'DELIVERED' && o.status !== 'FAILED' && o.status !== 'RETURNED')

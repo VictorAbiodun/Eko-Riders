@@ -1,22 +1,109 @@
-import { ChevronRight, MapPin } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { useAppData } from '../../context/AppContext'
-import { formatNaira } from '../../data/mockData'
 import type { Rider, Order } from '../../data/types'
 import { StatusBadge } from '../ui/StatusBadge'
 import { EmptyState } from '../ui/EmptyState'
-import { Package } from 'lucide-react'
+import { TrackingStepper } from '../orders/TrackingStepper'
+import { dropoffAreaFrom } from '../orders/OrderListRow'
 
 interface RiderDeliveriesListProps {
   rider: Rider
   onSelectOrder: (orderId: string) => void
 }
 
-export function RiderDeliveriesList({
-  rider,
-  onSelectOrder,
-}: RiderDeliveriesListProps) {
-  const { orders } = useAppData()
+function formatDateShort(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-NG', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
+}
 
+function DeliveryCard({
+  order,
+  isHero,
+  onClick,
+  index,
+}: {
+  order: Order
+  isHero: boolean
+  onClick: () => void
+  index: number
+}) {
+  const dropoffArea = dropoffAreaFrom(order.customerAddress)
+  const pickupArea = 'Lekki'
+  const estimatedDate = new Date(new Date(order.createdAt).getTime() + 2 * 60 * 60 * 1000)
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`card-press w-full rounded-xl p-5 text-left transition-all ${
+        isHero ? 'bg-brand text-white shadow-sm' : 'border border-neutral-200 bg-white shadow-sm'
+      }`}
+      style={{
+        animation: 'card-enter 0.4s ease-out both',
+        animationDelay: `${index * 60}ms`,
+      }}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <span
+          className={`font-data text-data-md font-bold tabular-nums ${
+            isHero ? 'text-white' : 'text-ink'
+          }`}
+        >
+          {order.id}
+        </span>
+        <StatusBadge status={order.status} inverse={isHero} />
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-4">
+        <div>
+          <p className={`text-xs font-semibold uppercase tracking-wider ${isHero ? 'text-white/70' : 'text-neutral-500'}`}>
+            From
+          </p>
+          <p className={`mt-0.5 text-sm font-bold ${isHero ? 'text-white' : 'text-ink'}`}>
+            {pickupArea}
+          </p>
+        </div>
+        <div>
+          <p className={`text-xs font-semibold uppercase tracking-wider ${isHero ? 'text-white/70' : 'text-neutral-500'}`}>
+            To
+          </p>
+          <p className={`mt-0.5 text-sm font-bold ${isHero ? 'text-white' : 'text-ink'}`}>
+            {dropoffArea}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-3 grid grid-cols-2 gap-4">
+        <div>
+          <p className={`text-xs font-semibold uppercase tracking-wider ${isHero ? 'text-white/70' : 'text-neutral-500'}`}>
+            Placed
+          </p>
+          <p className={`mt-0.5 text-sm font-medium ${isHero ? 'text-white/80' : 'text-neutral-600'}`}>
+            {formatDateShort(order.createdAt)}
+          </p>
+        </div>
+        <div>
+          <p className={`text-xs font-semibold uppercase tracking-wider ${isHero ? 'text-white/70' : 'text-neutral-500'}`}>
+            ETA
+          </p>
+          <p className={`mt-0.5 text-sm font-medium ${isHero ? 'text-white/80' : 'text-neutral-600'}`}>
+            {formatDateShort(estimatedDate.toISOString())}
+          </p>
+        </div>
+      </div>
+
+      <div className={`mt-3 border-t pt-3 ${isHero ? 'border-white/20' : 'border-neutral-100'}`}>
+        <TrackingStepper status={order.status} variant={isHero ? 'onBrand' : 'compact'} />
+      </div>
+    </button>
+  )
+}
+
+export function RiderDeliveriesList({ rider, onSelectOrder }: RiderDeliveriesListProps) {
+  const { orders } = useAppData()
   const riderOrders = orders.filter((o) => o.riderName === rider.name)
 
   const activeOrders = riderOrders.filter((o) =>
@@ -26,86 +113,44 @@ export function RiderDeliveriesList({
 
   if (riderOrders.length === 0) {
     return (
-      <div className="p-4">
-        <EmptyState
-          icon={Package}
-          title="No deliveries assigned"
-          description="You don't have any orders assigned to you yet."
-        />
-      </div>
+      <EmptyState
+        title="No deliveries assigned"
+        description="You don't have any orders assigned to you yet."
+      />
     )
   }
 
-  const renderOrderList = (list: Order[]) => (
-    <ul className="divide-y divide-neutral-100">
-      {list.map((order) => {
-        // Mock route logic: Seller Area -> Customer Area
-        // In the mock data, customerAddress usually ends with the area, e.g., "Yaba, Lagos".
-        const dropoffMatch = order.customerAddress.match(/([^,]+),\s*Lagos$/i)
-        const dropoffArea = dropoffMatch ? dropoffMatch[1].trim() : 'Lagos'
-        
-        // Find seller area from context (we can just pull it from the sellers list)
-        const pickupArea = 'Lekki' // Simplified for demo, can look up seller by order.sellerName if needed
+  const heroOrderId =
+    riderOrders.find((o) => o.status === 'OUT_FOR_DELIVERY')?.id ??
+    riderOrders.find((o) => o.status === 'PICKED_UP')?.id ??
+    riderOrders.find((o) => o.status === 'ASSIGNED')?.id ??
+    null
 
-        return (
-          <li key={order.id}>
-            <button
-              type="button"
-              onClick={() => onSelectOrder(order.id)}
-              className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors active:bg-neutral-50"
-            >
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-data text-sm font-bold text-ink">
-                    {order.id}
-                  </span>
-                  <StatusBadge status={order.status} />
-                </div>
-                
-                <div className="mt-2 flex items-center gap-1.5 text-sm text-neutral-600">
-                  <MapPin className="h-3.5 w-3.5 shrink-0 text-neutral-400" />
-                  <span className="truncate">
-                    {pickupArea} <span className="text-neutral-400">→</span> {dropoffArea}
-                  </span>
-                </div>
-
-                {order.codAmount > 0 && (
-                  <div className="mt-2 inline-flex items-center rounded bg-status-warning-bg px-1.5 py-0.5 text-xs font-semibold text-status-warning">
-                    COD {formatNaira(order.codAmount)}
-                  </div>
-                )}
-              </div>
-              <ChevronRight className="h-5 w-5 shrink-0 text-neutral-300" />
-            </button>
-          </li>
-        )
-      })}
-    </ul>
-  )
+  const allOrders = [...activeOrders, ...completedOrders]
 
   return (
-    <div className="bg-white min-h-dvh">
-      {activeOrders.length > 0 && (
-        <div>
-          <div className="bg-neutral-50 px-5 py-2.5 border-y border-neutral-200">
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-              Active deliveries ({activeOrders.length})
-            </h2>
-          </div>
-          {renderOrderList(activeOrders)}
+    <div className="min-h-full bg-neutral-50">
+      <div className="px-4 pt-5 pb-4">
+        <h1 className="font-heading text-2xl font-bold tracking-tight text-ink">
+          Recent Shipping
+        </h1>
+        <div className="mt-4 flex min-h-touch items-center gap-3 rounded-xl border border-neutral-200 bg-white px-4">
+          <Search className="h-5 w-5 text-neutral-400" strokeWidth={2} />
+          <span className="text-sm text-neutral-400">Search Shipping</span>
         </div>
-      )}
+      </div>
 
-      {completedOrders.length > 0 && (
-        <div>
-          <div className="bg-neutral-50 px-5 py-2.5 border-y border-neutral-200">
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-              Completed ({completedOrders.length})
-            </h2>
-          </div>
-          {renderOrderList(completedOrders)}
-        </div>
-      )}
+      <div className="flex flex-col gap-4 px-4 pb-8">
+        {allOrders.map((order, index) => (
+          <DeliveryCard
+            key={order.id}
+            order={order}
+            isHero={order.id === heroOrderId}
+            onClick={() => onSelectOrder(order.id)}
+            index={index}
+          />
+        ))}
+      </div>
     </div>
   )
 }

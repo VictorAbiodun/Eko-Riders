@@ -52,6 +52,7 @@ export function RiderApp() {
       tabs={RIDER_TABS}
       activeTab={activeTab}
       onTabChange={setActiveTab}
+      centerTabId="deliveries"
     >
       {activeTab === 'home' && (
         <RiderHome

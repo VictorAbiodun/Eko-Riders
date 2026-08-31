@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { CheckCircle2, Package, MapPin, User, Banknote } from 'lucide-react'
 import type { Seller, Order } from '../../data/types'
 import { useAppData } from '../../context/AppContext'
+import { nextOrderId } from '../../data/mockData'
 
 interface SellerCreateOrderProps {
   seller: Seller
@@ -12,7 +13,7 @@ export function SellerCreateOrder({
   seller,
   onSuccess,
 }: SellerCreateOrderProps) {
-  const { setOrders } = useAppData()
+  const { orders, setOrders } = useAppData()
 
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
@@ -28,14 +29,12 @@ export function SellerCreateOrder({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Generate mock order ID
-    const randomId = Math.floor(Math.random() * 900000) + 100000
-    const newOrderId = `ORD-${randomId}`
+    const newOrderId = nextOrderId(orders.map((o) => o.id))
 
     const newOrder: Order = {
       id: newOrderId,
       status: 'NEW',
-      sellerName: seller.name,
+      sellerName: seller.businessName,
       customerName,
       customerAddress,
       riderName: null,
@@ -122,7 +121,7 @@ export function SellerCreateOrder({
                   type="text"
                   value={customerAddress}
                   onChange={(e) => setCustomerAddress(e.target.value)}
-                  placeholder="123 Example Street, Lekki Phase 1, Lagos"
+                  placeholder="14 Admiralty Way, Lekki Phase 1, Lagos"
                   className="w-full rounded-lg border border-neutral-200 py-2 pl-9 pr-3 text-sm text-ink focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
                 />
               </div>
@@ -146,7 +145,7 @@ export function SellerCreateOrder({
                 type="text"
                 value={productDescription}
                 onChange={(e) => setProductDescription(e.target.value)}
-                placeholder="2x Black T-Shirts (Size M)"
+                placeholder="Ankara two-piece set (Size M)"
                 className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-ink focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
               />
             </div>

@@ -16,6 +16,7 @@ import { StatusBadge } from './components/ui/StatusBadge'
 import { TrackingPage } from './components/tracking/TrackingPage'
 import { RiderApp } from './components/rider/RiderApp'
 import { SellerApp } from './components/seller/SellerApp'
+import { AdminApp } from './components/admin/AdminApp'
 import { AppProvider, useAppData } from './context/AppContext'
 import { LandingPage } from './components/LandingPage'
 import { formatNaira } from './data/mockData'
@@ -264,7 +265,7 @@ export default function App() {
     return (
       <AppProvider>
         <LoadingGate>
-          <AppContent />
+          <AdminApp />
         </LoadingGate>
       </AppProvider>
     )
