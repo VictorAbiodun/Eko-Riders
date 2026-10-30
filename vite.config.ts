@@ -4,4 +4,10 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+
+  server: {
+    host: 'localhost',
+    port: 5173,
+    allowedHosts: ['catering-dreamboat-raving.ngrok-free.dev'],
+  },
 })

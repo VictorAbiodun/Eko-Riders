@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { User, Phone, MapPin, Bike as BikeIcon, CheckCircle2, XCircle, Clock } from 'lucide-react'
 import { useAppData } from '../../context/AppContext'
+import { EmptyState } from '../ui/EmptyState'
 import type { Rider } from '../../data/types'
 
 type RiderFilter = 'all' | 'available' | 'on_delivery' | 'offline'
@@ -142,6 +143,13 @@ export function AdminRiders() {
       </div>
 
       <div className="flex-1 overflow-y-auto">
+        {filteredRiders.length === 0 ? (
+          <EmptyState
+            title="No riders found"
+            description="No riders match this filter."
+          />
+        ) : (
+        <>
         {/* Desktop table */}
         <div className="hidden md:block">
           <table className="w-full text-sm">
@@ -230,6 +238,8 @@ export function AdminRiders() {
             )
           })}
         </div>
+        </>
+        )}
       </div>
     </div>
   )

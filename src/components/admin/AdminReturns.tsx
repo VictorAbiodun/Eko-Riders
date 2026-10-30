@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { RotateCcw, ArrowLeft, Package, CheckCircle2, Clock, AlertTriangle } from 'lucide-react'
 import { useAppData } from '../../context/AppContext'
 import { EmptyState } from '../ui/EmptyState'
-import { DanfoLoader } from '../ui/DanfoLoader'
 
 type ReturnStatus = 'pending' | 'processing' | 'completed'
 
@@ -41,7 +40,7 @@ function ReturnStatusBadge({ status }: { status: ReturnStatus }) {
     completed: 'Completed',
   }
   return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold ${styles[status]}`}>
+    <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold leading-none ${styles[status]}`}>
       {labels[status]}
     </span>
   )
@@ -115,16 +114,10 @@ export function AdminReturns() {
           <h1 className="font-heading text-2xl font-bold tracking-tight text-ink">Returns</h1>
         </div>
         <div className="flex-1 flex items-center justify-center p-8">
-          {/* Use the shared okada bike illustration for empty state */}
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-neutral-100">
-              <RotateCcw className="h-10 w-10 text-neutral-300" strokeWidth={1.5} />
-            </div>
-            <h2 className="font-heading text-lg font-bold text-ink">No returns yet</h2>
-            <p className="mt-1 text-sm text-neutral-500 max-w-[260px] mx-auto">
-              Failed and returned orders will appear here for resolution.
-            </p>
-          </div>
+          <EmptyState
+            title="No returns yet"
+            description="Failed and returned orders will appear here for resolution."
+          />
         </div>
       </div>
     )

@@ -76,7 +76,7 @@ export function AdminOrders({
           </h2>
         </div>
         <div className="flex-1 overflow-y-auto">
-          <SellerOrderDetail orderId={selectedOrderId} />
+          <SellerOrderDetail orderId={selectedOrderId} canDispatch />
         </div>
       </div>
     )
