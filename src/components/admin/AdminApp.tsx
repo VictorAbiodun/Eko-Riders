@@ -38,7 +38,9 @@ const TITLES: Record<string, string> = {
 export function AdminApp() {
   const [activeTab, setActiveTab] = useState('operations')
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
-  const loader = useDanfoTransition(selectedOrderId ? `order:${selectedOrderId}` : activeTab)
+  const loader = useDanfoTransition(
+    selectedOrderId ? `order:${selectedOrderId}` : activeTab,
+  )
 
   const handleNav = (id: string) => {
     setSelectedOrderId(null)
@@ -61,7 +63,11 @@ export function AdminApp() {
     <>
       {loader}
       <ResponsiveShell
-        title={selectedOrderId ? `Order ${selectedOrderId}` : TITLES[activeTab] ?? 'Admin'}
+        title={
+          selectedOrderId
+            ? `Order ${selectedOrderId}`
+            : (TITLES[activeTab] ?? 'Admin')
+        }
         tabs={ADMIN_TABS}
         activeTab={selectedOrderId ? 'orders' : activeTab}
         onTabChange={handleNav}

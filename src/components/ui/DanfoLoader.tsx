@@ -46,13 +46,13 @@ export function DanfoLoader({
     <div
       className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-neutral-50"
       style={{
-        animation: fadingOut ? 'loader-fade-out 280ms ease-out forwards' : undefined,
+        animation: fadingOut
+          ? 'loader-fade-out 280ms ease-out forwards'
+          : undefined,
       }}
     >
       {/* Okada delivery bike with gentle suspension bob */}
-      <div
-        style={{ animation: 'okada-bob 0.8s ease-in-out infinite' }}
-      >
+      <div style={{ animation: 'okada-bob 0.8s ease-in-out infinite' }}>
         <svg
           width="180"
           height="130"
@@ -62,7 +62,14 @@ export function DanfoLoader({
           aria-hidden="true"
         >
           {/* ── Ground shadow ── */}
-          <ellipse cx="150" cy="160" rx="90" ry="5" fill="#1E1C1A" opacity="0.07" />
+          <ellipse
+            cx="150"
+            cy="160"
+            rx="90"
+            ry="5"
+            fill="#1E1C1A"
+            opacity="0.07"
+          />
 
           {/* ── Rear wheel ── */}
           <circle cx="80" cy="138" r="22" fill="#1E1C1A" />
@@ -70,11 +77,46 @@ export function DanfoLoader({
           <circle cx="80" cy="138" r="10" fill="#1E1C1A" />
           <circle cx="80" cy="138" r="4" fill="#FCFAEE" />
           {/* Spokes hint */}
-          <line x1="80" y1="122" x2="80" y2="128" stroke="#5D5753" strokeWidth="1.5" />
-          <line x1="66" y1="132" x2="71" y2="135" stroke="#5D5753" strokeWidth="1.5" />
-          <line x1="94" y1="132" x2="89" y2="135" stroke="#5D5753" strokeWidth="1.5" />
-          <line x1="72" y1="150" x2="76" y2="146" stroke="#5D5753" strokeWidth="1.5" />
-          <line x1="88" y1="150" x2="84" y2="146" stroke="#5D5753" strokeWidth="1.5" />
+          <line
+            x1="80"
+            y1="122"
+            x2="80"
+            y2="128"
+            stroke="#5D5753"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="66"
+            y1="132"
+            x2="71"
+            y2="135"
+            stroke="#5D5753"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="94"
+            y1="132"
+            x2="89"
+            y2="135"
+            stroke="#5D5753"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="72"
+            y1="150"
+            x2="76"
+            y2="146"
+            stroke="#5D5753"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="88"
+            y1="150"
+            x2="84"
+            y2="146"
+            stroke="#5D5753"
+            strokeWidth="1.5"
+          />
 
           {/* ── Front wheel ── */}
           <circle cx="210" cy="138" r="22" fill="#1E1C1A" />
@@ -82,17 +124,68 @@ export function DanfoLoader({
           <circle cx="210" cy="138" r="10" fill="#1E1C1A" />
           <circle cx="210" cy="138" r="4" fill="#FCFAEE" />
           {/* Spokes hint */}
-          <line x1="210" y1="122" x2="210" y2="128" stroke="#5D5753" strokeWidth="1.5" />
-          <line x1="196" y1="132" x2="201" y2="135" stroke="#5D5753" strokeWidth="1.5" />
-          <line x1="224" y1="132" x2="219" y2="135" stroke="#5D5753" strokeWidth="1.5" />
-          <line x1="202" y1="150" x2="206" y2="146" stroke="#5D5753" strokeWidth="1.5" />
-          <line x1="218" y1="150" x2="214" y2="146" stroke="#5D5753" strokeWidth="1.5" />
+          <line
+            x1="210"
+            y1="122"
+            x2="210"
+            y2="128"
+            stroke="#5D5753"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="196"
+            y1="132"
+            x2="201"
+            y2="135"
+            stroke="#5D5753"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="224"
+            y1="132"
+            x2="219"
+            y2="135"
+            stroke="#5D5753"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="202"
+            y1="150"
+            x2="206"
+            y2="146"
+            stroke="#5D5753"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="218"
+            y1="150"
+            x2="214"
+            y2="146"
+            stroke="#5D5753"
+            strokeWidth="1.5"
+          />
 
           {/* ── Chain / lower frame ── */}
-          <line x1="80" y1="138" x2="145" y2="120" stroke="#1E1C1A" strokeWidth="3" strokeLinecap="round" />
+          <line
+            x1="80"
+            y1="138"
+            x2="145"
+            y2="120"
+            stroke="#1E1C1A"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
 
           {/* ── Rear swingarm ── */}
-          <line x1="80" y1="138" x2="140" y2="110" stroke="#3F3937" strokeWidth="4" strokeLinecap="round" />
+          <line
+            x1="80"
+            y1="138"
+            x2="140"
+            y2="110"
+            stroke="#3F3937"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
 
           {/* ── Frame backbone ── */}
           <path
@@ -104,7 +197,15 @@ export function DanfoLoader({
             fill="none"
           />
           {/* Down tube */}
-          <line x1="140" y1="110" x2="145" y2="126" stroke="#1E1C1A" strokeWidth="3.5" strokeLinecap="round" />
+          <line
+            x1="140"
+            y1="110"
+            x2="145"
+            y2="126"
+            stroke="#1E1C1A"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
 
           {/* ── Engine block (simplified rectangle) ── */}
           <rect x="125" y="108" width="30" height="20" rx="4" fill="#3F3937" />
@@ -128,11 +229,7 @@ export function DanfoLoader({
           {/* Second thinner stripe */}
           <rect x="142" y="87" width="41" height="3" rx="1" fill="#1E1C1A" />
           {/* Tank highlight */}
-          <path
-            d="M152 70L156 69V76L152 77V70Z"
-            fill="#E9B855"
-            opacity="0.6"
-          />
+          <path d="M152 70L156 69V76L152 77V70Z" fill="#E9B855" opacity="0.6" />
 
           {/* ── Fairing / side panel — mustard yellow ── */}
           <path
@@ -151,11 +248,35 @@ export function DanfoLoader({
           <rect x="123" y="66" width="32" height="4" rx="2" fill="#3F3937" />
 
           {/* ── Front fork ── */}
-          <line x1="200" y1="90" x2="210" y2="138" stroke="#5D5753" strokeWidth="4" strokeLinecap="round" />
-          <line x1="195" y1="90" x2="206" y2="138" stroke="#5D5753" strokeWidth="3" strokeLinecap="round" />
+          <line
+            x1="200"
+            y1="90"
+            x2="210"
+            y2="138"
+            stroke="#5D5753"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+          <line
+            x1="195"
+            y1="90"
+            x2="206"
+            y2="138"
+            stroke="#5D5753"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
 
           {/* ── Handlebars ── */}
-          <line x1="185" y1="64" x2="205" y2="60" stroke="#1E1C1A" strokeWidth="3.5" strokeLinecap="round" />
+          <line
+            x1="185"
+            y1="64"
+            x2="205"
+            y2="60"
+            stroke="#1E1C1A"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
           {/* Left grip */}
           <rect x="180" y="61" width="8" height="6" rx="3" fill="#3F3937" />
           {/* Right grip */}
@@ -196,20 +317,88 @@ export function DanfoLoader({
           {/* Box latch */}
           <rect x="101" y="54" width="6" height="3" rx="1" fill="#1E1C1A" />
           {/* Box side highlight */}
-          <rect x="91" y="55" width="3" height="6" rx="1" fill="#E9B855" opacity="0.5" />
+          <rect
+            x="91"
+            y="55"
+            width="3"
+            height="6"
+            rx="1"
+            fill="#E9B855"
+            opacity="0.5"
+          />
 
           {/* ── Rack / carrier under the box ── */}
-          <line x1="90" y1="76" x2="118" y2="76" stroke="#3F3937" strokeWidth="2.5" strokeLinecap="round" />
-          <line x1="92" y1="76" x2="95" y2="80" stroke="#3F3937" strokeWidth="2" strokeLinecap="round" />
-          <line x1="116" y1="76" x2="113" y2="80" stroke="#3F3937" strokeWidth="2" strokeLinecap="round" />
+          <line
+            x1="90"
+            y1="76"
+            x2="118"
+            y2="76"
+            stroke="#3F3937"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          <line
+            x1="92"
+            y1="76"
+            x2="95"
+            y2="80"
+            stroke="#3F3937"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <line
+            x1="116"
+            y1="76"
+            x2="113"
+            y2="80"
+            stroke="#3F3937"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
 
           {/* ── Speed lines (behind the bike, subtle) ── */}
-          <line x1="20" y1="108" x2="46" y2="108" stroke="#1E1C1A" strokeWidth="2.5" strokeLinecap="round" opacity="0.15" />
-          <line x1="28" y1="118" x2="50" y2="118" stroke="#1E1C1A" strokeWidth="2" strokeLinecap="round" opacity="0.10" />
-          <line x1="34" y1="128" x2="52" y2="128" stroke="#1E1C1A" strokeWidth="1.5" strokeLinecap="round" opacity="0.07" />
+          <line
+            x1="20"
+            y1="108"
+            x2="46"
+            y2="108"
+            stroke="#1E1C1A"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            opacity="0.15"
+          />
+          <line
+            x1="28"
+            y1="118"
+            x2="50"
+            y2="118"
+            stroke="#1E1C1A"
+            strokeWidth="2"
+            strokeLinecap="round"
+            opacity="0.10"
+          />
+          <line
+            x1="34"
+            y1="128"
+            x2="52"
+            y2="128"
+            stroke="#1E1C1A"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            opacity="0.07"
+          />
 
           {/* ── Ground line ── */}
-          <line x1="50" y1="160" x2="250" y2="160" stroke="#1E1C1A" strokeWidth="2" strokeLinecap="round" opacity="0.12" />
+          <line
+            x1="50"
+            y1="160"
+            x2="250"
+            y2="160"
+            stroke="#1E1C1A"
+            strokeWidth="2"
+            strokeLinecap="round"
+            opacity="0.12"
+          />
         </svg>
       </div>
 

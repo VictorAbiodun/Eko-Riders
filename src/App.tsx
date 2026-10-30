@@ -41,11 +41,7 @@ function LoadingGate({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <DanfoLoader
-        message={message}
-        durationMs={700}
-        onFinish={handleFinish}
-      />
+      <DanfoLoader message={message} durationMs={700} onFinish={handleFinish} />
     )
   }
 

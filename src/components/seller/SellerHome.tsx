@@ -17,8 +17,10 @@ export function SellerHome({
   onSelectOrder,
 }: SellerHomeProps) {
   const { orders } = useAppData()
-  
-  const sellerOrders = orders.filter((o) => o.sellerName === seller.businessName)
+
+  const sellerOrders = orders.filter(
+    (o) => o.sellerName === seller.businessName,
+  )
   const sortedOrders = [...sellerOrders].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   )
@@ -33,7 +35,11 @@ export function SellerHome({
 
   // Mock pending COD
   const pendingCodOrders = sellerOrders.filter(
-    (o) => o.codAmount > 0 && o.status !== 'DELIVERED' && o.status !== 'FAILED' && o.status !== 'RETURNED',
+    (o) =>
+      o.codAmount > 0 &&
+      o.status !== 'DELIVERED' &&
+      o.status !== 'FAILED' &&
+      o.status !== 'RETURNED',
   )
   const pendingCod = pendingCodOrders.reduce((sum, o) => sum + o.codAmount, 0)
 
@@ -57,7 +63,6 @@ export function SellerHome({
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {/* Left Column (Desktop) / Top Section (Mobile) */}
         <div className="flex flex-col gap-6 md:col-span-2">
-          
           {/* ── Delivery Usage ── */}
           <div className="rounded-xl border border-neutral-200 bg-white p-5">
             <div className="flex items-center justify-between">
@@ -72,9 +77,7 @@ export function SellerHome({
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
-            <p className="mt-2 text-xs text-neutral-400">
-              Resets in 12 days
-            </p>
+            <p className="mt-2 text-xs text-neutral-400">Resets in 12 days</p>
           </div>
 
           {/* ── Stats Row ── */}

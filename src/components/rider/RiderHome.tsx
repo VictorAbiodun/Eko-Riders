@@ -18,7 +18,9 @@ export function RiderHome({
 
   const riderOrders = orders.filter((o) => o.riderName === rider.name)
   const completed = riderOrders.filter((o) => o.status === 'DELIVERED').length
-  const active = riderOrders.filter((o) => o.status === 'OUT_FOR_DELIVERY').length
+  const active = riderOrders.filter(
+    (o) => o.status === 'OUT_FOR_DELIVERY',
+  ).length
   const pending = riderOrders.filter((o) =>
     ['ASSIGNED', 'PICKED_UP'].includes(o.status),
   ).length

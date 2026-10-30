@@ -20,7 +20,9 @@ export function SellerCreateOrder({
   const [customerAddress, setCustomerAddress] = useState('')
   const [productDescription, setProductDescription] = useState('')
   const [packageValue, setPackageValue] = useState('')
-  const [paymentMethod, setPaymentMethod] = useState<'PREPAID' | 'COD'>('PREPAID')
+  const [paymentMethod, setPaymentMethod] = useState<'PREPAID' | 'COD'>(
+    'PREPAID',
+  )
 
   const [showSuccess, setShowSuccess] = useState(false)
 
@@ -39,7 +41,8 @@ export function SellerCreateOrder({
       customerAddress,
       riderName: null,
       productDescription,
-      codAmount: paymentMethod === 'COD' ? Number(packageValue) + deliveryFee : 0,
+      codAmount:
+        paymentMethod === 'COD' ? Number(packageValue) + deliveryFee : 0,
       deliveryFee,
       createdAt: new Date().toISOString(),
     }
@@ -177,10 +180,11 @@ export function SellerCreateOrder({
             <button
               type="button"
               onClick={() => setPaymentMethod('PREPAID')}
-              className={`rounded-lg border-2 px-4 py-3 text-center transition-colors ${paymentMethod === 'PREPAID'
-                ? 'border-brand bg-brand-50 text-brand-700'
-                : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
-                }`}
+              className={`rounded-lg border-2 px-4 py-3 text-center transition-colors ${
+                paymentMethod === 'PREPAID'
+                  ? 'border-brand bg-brand-50 text-brand-700'
+                  : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
+              }`}
             >
               <span className="block text-sm font-bold">Prepaid</span>
               <span className="mt-0.5 block text-xs font-medium opacity-80">
@@ -191,10 +195,11 @@ export function SellerCreateOrder({
             <button
               type="button"
               onClick={() => setPaymentMethod('COD')}
-              className={`rounded-lg border-2 px-4 py-3 text-center transition-colors ${paymentMethod === 'COD'
-                ? 'border-brand bg-brand-50 text-brand-700'
-                : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
-                }`}
+              className={`rounded-lg border-2 px-4 py-3 text-center transition-colors ${
+                paymentMethod === 'COD'
+                  ? 'border-brand bg-brand-50 text-brand-700'
+                  : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
+              }`}
             >
               <span className="block text-sm font-bold">Pay on Delivery</span>
               <span className="mt-0.5 block text-xs font-medium opacity-80">

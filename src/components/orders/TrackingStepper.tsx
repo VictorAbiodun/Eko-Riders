@@ -54,10 +54,16 @@ export function TrackingStepper({
   const filledDot = isOnBrand ? 'bg-white' : 'bg-brand'
   const innerDot = isOnBrand ? 'bg-brand' : 'bg-white'
   const labelActive = isOnBrand ? 'font-bold text-white' : 'font-bold text-ink'
-  const labelMuted = isOnBrand ? 'font-medium text-white/50' : 'font-medium text-neutral-400'
+  const labelMuted = isOnBrand
+    ? 'font-medium text-white/50'
+    : 'font-medium text-neutral-400'
 
   return (
-    <div className={variant === 'default' ? 'px-5 py-6' : isOnBrand ? 'px-1' : 'px-1 pt-3'}>
+    <div
+      className={
+        variant === 'default' ? 'px-5 py-6' : isOnBrand ? 'px-1' : 'px-1 pt-3'
+      }
+    >
       {titleVisible && (
         <h2 className="mb-5 font-heading text-sm font-semibold uppercase tracking-wide text-neutral-500">
           Delivery progress
@@ -91,17 +97,32 @@ export function TrackingStepper({
                 {i > 0 && (
                   <div
                     className={`h-0.5 flex-1 ${isCompleted ? completedLine : ''}`}
-                    style={!isCompleted ? { backgroundImage: dashedLine, backgroundSize: '8px 2px', backgroundRepeat: 'repeat-x', backgroundPosition: 'center' } : undefined}
+                    style={
+                      !isCompleted
+                        ? {
+                            backgroundImage: dashedLine,
+                            backgroundSize: '8px 2px',
+                            backgroundRepeat: 'repeat-x',
+                            backgroundPosition: 'center',
+                          }
+                        : undefined
+                    }
                   />
                 )}
                 <div
                   className={`relative flex shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
                     isCompact ? 'h-3.5 w-3.5' : 'h-5 w-5'
                   } ${filled ? filledDot : upcomingDot}`}
-                  style={isCurrent ? { animation: 'dot-pulse 2s ease-in-out infinite' } : undefined}
+                  style={
+                    isCurrent
+                      ? { animation: 'dot-pulse 2s ease-in-out infinite' }
+                      : undefined
+                  }
                 >
                   {filled && (
-                    <span className={`rounded-full ${isCompact ? 'h-1.5 w-1.5' : 'h-2 w-2'} ${innerDot}`} />
+                    <span
+                      className={`rounded-full ${isCompact ? 'h-1.5 w-1.5' : 'h-2 w-2'} ${innerDot}`}
+                    />
                   )}
                   {!filled && (
                     <span className="h-1.5 w-1.5 rounded-full bg-neutral-300" />
@@ -112,7 +133,12 @@ export function TrackingStepper({
                     className={`h-0.5 flex-1 ${lineAfterFilled ? completedLine : ''}`}
                     style={
                       !lineAfterFilled
-                        ? { backgroundImage: dashedLine, backgroundSize: '8px 2px', backgroundRepeat: 'repeat-x', backgroundPosition: 'center' }
+                        ? {
+                            backgroundImage: dashedLine,
+                            backgroundSize: '8px 2px',
+                            backgroundRepeat: 'repeat-x',
+                            backgroundPosition: 'center',
+                          }
                         : undefined
                     }
                   />
@@ -132,7 +158,10 @@ export function TrackingStepper({
 
       {descVisible && progress >= 0 && progress < TRACKING_STEPS.length && (
         <p className="mt-4 text-center text-sm font-medium text-accent-700">
-          {TRACKING_STEPS[Math.min(progress, TRACKING_STEPS.length - 1)]?.description}
+          {
+            TRACKING_STEPS[Math.min(progress, TRACKING_STEPS.length - 1)]
+              ?.description
+          }
         </p>
       )}
     </div>

@@ -25,7 +25,9 @@ export function OrderListRow({
   dropoffLabel,
 }: OrderListRowProps) {
   const dropoff = dropoffLabel ?? dropoffAreaFrom(order.customerAddress)
-  const route = pickupLabel ? `${pickupLabel} → ${dropoff}` : `${order.customerName} → ${dropoff}`
+  const route = pickupLabel
+    ? `${pickupLabel} → ${dropoff}`
+    : `${order.customerName} → ${dropoff}`
 
   const inner = (
     <>
@@ -50,10 +52,14 @@ export function OrderListRow({
               Prepaid
             </span>
           )}
-          {meta && <span className="truncate text-sm text-neutral-500">{meta}</span>}
+          {meta && (
+            <span className="truncate text-sm text-neutral-500">{meta}</span>
+          )}
         </div>
       </div>
-      {onClick && <ChevronRight className="h-5 w-5 shrink-0 text-neutral-300" />}
+      {onClick && (
+        <ChevronRight className="h-5 w-5 shrink-0 text-neutral-300" />
+      )}
     </>
   )
 

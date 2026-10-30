@@ -9,7 +9,7 @@ interface RiderEarningsProps {
 
 export function RiderEarnings({ rider }: RiderEarningsProps) {
   const { orders } = useAppData()
-  
+
   const riderOrders = orders.filter(
     (o) => o.riderName === rider.name && o.status === 'DELIVERED',
   )
@@ -68,18 +68,19 @@ export function RiderEarnings({ rider }: RiderEarningsProps) {
 
       <div className="mt-6 rounded-xl border border-neutral-200 bg-white p-5">
         <h3 className="text-sm font-bold text-ink">Breakdown</h3>
-        
+
         <div className="mt-4 flex items-center justify-between border-b border-neutral-100 pb-3">
           <p className="text-sm text-neutral-600">Base earnings</p>
           <p className="font-data font-medium text-ink">
             {formatNaira(grossEarnings)}
           </p>
         </div>
-        
+
         <div className="mt-3 flex items-center justify-between pb-3">
           <p className="text-sm text-neutral-600">Performance bonus</p>
           <p className="font-data font-medium text-brand-700">
-            {bonuses > 0 ? '+' : ''}{formatNaira(bonuses)}
+            {bonuses > 0 ? '+' : ''}
+            {formatNaira(bonuses)}
           </p>
         </div>
       </div>

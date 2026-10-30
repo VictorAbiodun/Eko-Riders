@@ -13,7 +13,8 @@ interface AdminOrdersProps {
   onBack: () => void
 }
 
-type FilterTab = 'ALL' | 'PENDING' | 'IN_TRANSIT' | 'DELIVERED' | 'FAILED' | 'RETURNED'
+type FilterTab =
+  'ALL' | 'PENDING' | 'IN_TRANSIT' | 'DELIVERED' | 'FAILED' | 'RETURNED'
 
 const FILTER_TABS: { id: FilterTab; label: string }[] = [
   { id: 'ALL', label: 'All' },
@@ -160,9 +161,8 @@ export function AdminOrders({
                 </thead>
                 <tbody className="divide-y divide-neutral-100 bg-white">
                   {filteredOrders.map((order) => {
-                    const dropoffMatch = order.customerAddress.match(
-                      /([^,]+),\s*Lagos$/i,
-                    )
+                    const dropoffMatch =
+                      order.customerAddress.match(/([^,]+),\s*Lagos$/i)
                     const dropoffArea = dropoffMatch
                       ? dropoffMatch[1].trim()
                       : 'Lagos'
@@ -216,9 +216,8 @@ export function AdminOrders({
             {/* Mobile card list */}
             <div className="md:hidden divide-y divide-neutral-100 bg-white">
               {filteredOrders.map((order) => {
-                const dropoffMatch = order.customerAddress.match(
-                  /([^,]+),\s*Lagos$/i,
-                )
+                const dropoffMatch =
+                  order.customerAddress.match(/([^,]+),\s*Lagos$/i)
                 const dropoffArea = dropoffMatch
                   ? dropoffMatch[1].trim()
                   : 'Lagos'

@@ -80,9 +80,9 @@ Work in order. Each phase ends in something you can demo. Do not start a phase u
 - [x] Rename ShipFast to **Eko Riders** everywhere (done; the demo's localStorage key is now `eko_riders_demo_orders`, so saved demo orders reset once) (`package.json` name, `index.html` title, headers, landing page, loader copy, README)
 - [~] Added `typecheck` script and `.github/workflows/ci.yml` (lint, typecheck, build). The `test` script waits for the test runner in Phase 6
 - [x] Added `.env.example`; `.env*` is gitignored except the example
-- [ ] Add Prettier or Oxlint format rules so diffs stay small
+- [x] Add Prettier format rules so diffs stay small (done 2026-10-30; Prettier + .editorconfig + .prettierrc + format/format:check scripts & CI step)
 
-**Exit:** green CI on every push. Local build, typecheck and lint are green; CI itself runs once the branch is pushed. Still open in this phase: pushing the branch (needs repo access) and the formatter.
+**Exit:** green CI on every push. Local build, typecheck, lint, and formatting check are green; CI itself runs once the branch is pushed. Still open in this phase: pushing the branch (needs repo access).
 
 ### Phase 1 — Backend, data model and auth (about 1 week)
 - [ ] Create the Supabase project (separate **staging** and **production** projects)
@@ -135,13 +135,13 @@ Work in order. Each phase ends in something you can demo. Do not start a phase u
 **Exit:** run ten real or test-mode deliveries end to end and the ledger balances to the kobo.
 
 ### Phase 5 — Installable app (PWA) (about 3–4 days)
-- [ ] `manifest.webmanifest`: name, short name, `start_url`, `display: standalone`, theme and background colours
-- [x] Icon set: 192, 512, maskable 512, Apple touch icon, favicon, in `public/icons/` (done 2026-10-30; SVG masters `icon.svg` and `icon-maskable.svg`). Still to do: reference them from the manifest
+- [x] `manifest.webmanifest`: name, short name, `start_url`, `display: standalone`, theme and background colours (done 2026-10-30)
+- [x] Icon set: 192, 512, maskable 512, Apple touch icon, favicon, in `public/icons/` (done 2026-10-30; SVG masters `icon.svg` and `icon-maskable.svg`). Referenced from the manifest
 - [ ] Service worker (Vite PWA plugin): cache the app shell; show a friendly offline screen; queue status updates for riders while offline and sync when back online
 - [ ] Install prompt UX: "Add to Home Screen" banner on Android; short instructions for iOS Safari
 - [ ] Separate entry points so riders can install straight to `/rider`, sellers to `/seller` (per-role `start_url` or per-role manifests)
 - [ ] Update flow: tell the user when a new version is ready
-- [ ] Meta tags: description, Open Graph image, theme-color that matches the real header colour (currently `#1A1A1A`)
+- [x] Meta tags: description, Open Graph image, theme-color that matches the real header colour (currently `#1A1A1A`), mobile-web-app-capable (done 2026-10-30)
 - [ ] Lighthouse PWA and performance pass on a mid-range Android phone over throttled 3G/4G; target first load under about 3 s and a bundle that stays small (currently about 85 kB gzipped JS)
 
 **Exit:** installing from Chrome on Android and Safari on iPhone gives a home-screen icon that opens full screen and survives a dropped connection.
@@ -252,6 +252,9 @@ Current TypeScript types map onto this: `Order`, `Seller`, `Rider`, `Customer`, 
 ## 7. Change log
 
 - 2026-10-30: Phase 0 done locally: renamed to Eko Riders, build errors cleared, dead code removed, ngrok host removed, `.env.example`, CI workflow and README added. Smoke-tested all routes at 360 px with no console errors.
+- 2026-10-30: Configured Prettier and EditorConfig (.prettierrc, .prettierignore, .editorconfig), added `format` / `format:check` scripts, and integrated format check into CI workflow. Phase 0 formatting complete.
+- 2026-10-30: Created `public/manifest.webmanifest` and added PWA, Open Graph, and SEO meta tags to `index.html`.
+- 2026-10-30: Replaced placeholder package icons in UI headers (Landing page, Responsive shell sidebar, and Tracking page) with the official icon-512.png and updated index.html icon links.
 - 2026-10-30: App icon created (yellow tile, black striped "E" with wheel dot) and linked in `index.html`. Victor confirmed this is a real app, not a demo project.
 - 2026-10-30: Sign-up decided: Supabase Auth. Pilot zone decided: Ikeja.
 - 2026-10-30: Decisions recorded: name Eko Riders, Supabase, Paystack, MapLibre + OpenFreeMap. Legal documents still open.

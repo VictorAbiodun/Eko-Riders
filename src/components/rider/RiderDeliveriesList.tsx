@@ -32,14 +32,18 @@ function DeliveryCard({
 }) {
   const dropoffArea = dropoffAreaFrom(order.customerAddress)
   const pickupArea = 'Lekki'
-  const estimatedDate = new Date(new Date(order.createdAt).getTime() + 2 * 60 * 60 * 1000)
+  const estimatedDate = new Date(
+    new Date(order.createdAt).getTime() + 2 * 60 * 60 * 1000,
+  )
 
   return (
     <button
       type="button"
       onClick={onClick}
       className={`card-press w-full rounded-xl p-5 text-left transition-all ${
-        isHero ? 'bg-brand text-white shadow-sm' : 'border border-neutral-200 bg-white shadow-sm'
+        isHero
+          ? 'bg-brand text-white shadow-sm'
+          : 'border border-neutral-200 bg-white shadow-sm'
       }`}
       style={{
         animation: 'card-enter 0.4s ease-out both',
@@ -59,18 +63,26 @@ function DeliveryCard({
 
       <div className="mt-4 grid grid-cols-2 gap-4">
         <div>
-          <p className={`text-xs font-semibold uppercase tracking-wider ${isHero ? 'text-white/70' : 'text-neutral-500'}`}>
+          <p
+            className={`text-xs font-semibold uppercase tracking-wider ${isHero ? 'text-white/70' : 'text-neutral-500'}`}
+          >
             From
           </p>
-          <p className={`mt-0.5 text-sm font-bold ${isHero ? 'text-white' : 'text-ink'}`}>
+          <p
+            className={`mt-0.5 text-sm font-bold ${isHero ? 'text-white' : 'text-ink'}`}
+          >
             {pickupArea}
           </p>
         </div>
         <div>
-          <p className={`text-xs font-semibold uppercase tracking-wider ${isHero ? 'text-white/70' : 'text-neutral-500'}`}>
+          <p
+            className={`text-xs font-semibold uppercase tracking-wider ${isHero ? 'text-white/70' : 'text-neutral-500'}`}
+          >
             To
           </p>
-          <p className={`mt-0.5 text-sm font-bold ${isHero ? 'text-white' : 'text-ink'}`}>
+          <p
+            className={`mt-0.5 text-sm font-bold ${isHero ? 'text-white' : 'text-ink'}`}
+          >
             {dropoffArea}
           </p>
         </div>
@@ -78,31 +90,47 @@ function DeliveryCard({
 
       <div className="mt-3 grid grid-cols-2 gap-4">
         <div>
-          <p className={`text-xs font-semibold uppercase tracking-wider ${isHero ? 'text-white/70' : 'text-neutral-500'}`}>
+          <p
+            className={`text-xs font-semibold uppercase tracking-wider ${isHero ? 'text-white/70' : 'text-neutral-500'}`}
+          >
             Placed
           </p>
-          <p className={`mt-0.5 text-sm font-medium ${isHero ? 'text-white/80' : 'text-neutral-600'}`}>
+          <p
+            className={`mt-0.5 text-sm font-medium ${isHero ? 'text-white/80' : 'text-neutral-600'}`}
+          >
             {formatDateShort(order.createdAt)}
           </p>
         </div>
         <div>
-          <p className={`text-xs font-semibold uppercase tracking-wider ${isHero ? 'text-white/70' : 'text-neutral-500'}`}>
+          <p
+            className={`text-xs font-semibold uppercase tracking-wider ${isHero ? 'text-white/70' : 'text-neutral-500'}`}
+          >
             ETA
           </p>
-          <p className={`mt-0.5 text-sm font-medium ${isHero ? 'text-white/80' : 'text-neutral-600'}`}>
+          <p
+            className={`mt-0.5 text-sm font-medium ${isHero ? 'text-white/80' : 'text-neutral-600'}`}
+          >
             {formatDateShort(estimatedDate.toISOString())}
           </p>
         </div>
       </div>
 
-      <div className={`mt-3 border-t pt-3 ${isHero ? 'border-white/20' : 'border-neutral-100'}`}>
-        <TrackingStepper status={order.status} variant={isHero ? 'onBrand' : 'compact'} />
+      <div
+        className={`mt-3 border-t pt-3 ${isHero ? 'border-white/20' : 'border-neutral-100'}`}
+      >
+        <TrackingStepper
+          status={order.status}
+          variant={isHero ? 'onBrand' : 'compact'}
+        />
       </div>
     </button>
   )
 }
 
-export function RiderDeliveriesList({ rider, onSelectOrder }: RiderDeliveriesListProps) {
+export function RiderDeliveriesList({
+  rider,
+  onSelectOrder,
+}: RiderDeliveriesListProps) {
   const { orders } = useAppData()
   const riderOrders = orders.filter((o) => o.riderName === rider.name)
 

@@ -48,7 +48,8 @@ export interface Customer {
   area: string
 }
 
-export type StatusSemantic = 'pending' | 'info' | 'success' | 'danger' | 'warning'
+export type StatusSemantic =
+  'pending' | 'info' | 'success' | 'danger' | 'warning'
 
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   NEW: 'New',

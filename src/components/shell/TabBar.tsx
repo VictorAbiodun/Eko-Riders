@@ -20,7 +20,12 @@ interface TabBarProps {
  * - One center tab elevated as a floating circular FAB with brand fill
  * - Rounded top corners, subtle shadow instead of hard border
  */
-export function TabBar({ tabs, activeTab, onTabChange, centerTabId }: TabBarProps) {
+export function TabBar({
+  tabs,
+  activeTab,
+  onTabChange,
+  centerTabId,
+}: TabBarProps) {
   return (
     <nav
       className="fixed inset-x-0 bottom-0 z-20 bg-white"
@@ -50,13 +55,8 @@ export function TabBar({ tabs, activeTab, onTabChange, centerTabId }: TabBarProp
                 aria-label={tab.label}
               >
                 {/* Elevated FAB circle */}
-                <div
-                  className="shadow-fab -mt-5 flex h-14 w-14 items-center justify-center rounded-full bg-brand transition-transform active:scale-95"
-                >
-                  <Icon
-                    className="h-6 w-6 text-white"
-                    strokeWidth={2.25}
-                  />
+                <div className="shadow-fab -mt-5 flex h-14 w-14 items-center justify-center rounded-full bg-brand transition-transform active:scale-95">
+                  <Icon className="h-6 w-6 text-white" strokeWidth={2.25} />
                 </div>
                 <span className="mt-1 text-[10px] font-bold text-brand-700">
                   {tab.label}
@@ -81,7 +81,9 @@ export function TabBar({ tabs, activeTab, onTabChange, centerTabId }: TabBarProp
               />
               <span
                 className={`text-[10px] ${
-                  isActive ? 'font-bold text-ink' : 'font-medium text-neutral-400'
+                  isActive
+                    ? 'font-bold text-ink'
+                    : 'font-medium text-neutral-400'
                 }`}
               >
                 {tab.label}
