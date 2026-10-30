@@ -174,7 +174,16 @@ export function LoginPage({
       setLoading(false)
 
       if (error) {
-        setLocalError(error.message)
+        if (
+          error.message.toLowerCase().includes('rate limit') ||
+          error.message.toLowerCase().includes('email')
+        ) {
+          setLocalError(
+            'Email rate limit reached (Supabase default mailer is capped at ~3 emails/hour). In your Supabase Dashboard -> Authentication -> Providers -> Email, turn OFF "Confirm email" to allow unlimited instant signups!',
+          )
+        } else {
+          setLocalError(error.message)
+        }
       } else if (needsEmailConfirmation) {
         setSuccessMessage(
           'Account registered! Please check your email inbox to confirm your account and sign in.',

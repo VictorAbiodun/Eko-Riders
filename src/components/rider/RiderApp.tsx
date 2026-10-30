@@ -21,15 +21,33 @@ const RIDER_TABS: TabItem[] = [
 export function RiderApp() {
   const { riders } = useAppData()
   const { user, profile, rider, signOut } = useAuth()
-  // Mock fallback
-  const mockRider = riders.find((r) => r.name === 'Ibrahim Musa')
+
+  // Fallback mock if not logged in
+  const mockRider = riders.find((r) => r.name === 'Ibrahim Musa') ?? riders[0]
+
+  // Use logged-in rider data when authenticated, or fallback to mock in demo mode
+  const activeRider = user
+    ? {
+        id: rider?.id ?? user.id,
+        name: profile?.full_name ?? user.user_metadata?.full_name ?? 'Rider',
+        phone: profile?.phone ?? user.user_metadata?.phone ?? '',
+        vehicleType:
+          (rider?.vehicle_type as 'bike' | 'bicycle' | 'van') ??
+          user.user_metadata?.vehicle_type ??
+          'bike',
+        status:
+          (rider?.status as 'available' | 'on_delivery' | 'offline') ??
+          'available',
+        currentZone: rider?.current_zone ?? user.user_metadata?.area ?? 'Ikeja',
+        completedToday: 0,
+        rating: 5.0,
+      }
+    : mockRider
 
   const [activeTab, setActiveTab] = useState('home')
 
   // Drill-down state for Delivery Details
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
-
-  if (!mockRider) return null
 
   // If viewing a specific order detail, hide the shell/tabs and show detail full-screen
   if (selectedOrderId) {
@@ -58,7 +76,7 @@ export function RiderApp() {
     >
       {activeTab === 'home' && (
         <RiderHome
-          rider={mockRider}
+          rider={activeRider}
           onNavigateToDeliveries={() => setActiveTab('deliveries')}
           onNavigateToEarnings={() => setActiveTab('earnings')}
         />
@@ -66,26 +84,26 @@ export function RiderApp() {
 
       {activeTab === 'deliveries' && (
         <RiderDeliveriesList
-          rider={mockRider}
+          rider={activeRider}
           onSelectOrder={setSelectedOrderId}
         />
       )}
 
-      {activeTab === 'earnings' && <RiderEarnings rider={mockRider} />}
+      {activeTab === 'earnings' && <RiderEarnings rider={activeRider} />}
 
       {activeTab === 'profile' && (
         <div className="p-4 space-y-4">
           <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs">
             <div className="flex items-center gap-3.5">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 font-bold text-base">
-                {profile?.full_name ? profile.full_name[0] : 'I'}
+                {activeRider.name[0]}
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-heading text-base font-bold text-ink truncate">
-                  {profile?.full_name ?? mockRider.name}
+                  {activeRider.name}
                 </h3>
                 <p className="text-xs text-neutral-500 truncate">
-                  {user?.email ?? mockRider.phone}
+                  {user?.email ?? activeRider.phone}
                 </p>
               </div>
             </div>
@@ -93,13 +111,13 @@ export function RiderApp() {
               <div className="flex items-center justify-between">
                 <span>Vehicle type</span>
                 <span className="font-semibold uppercase text-ink">
-                  {rider?.vehicle_type ?? mockRider.vehicleType}
+                  {activeRider.vehicleType}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Active zone</span>
                 <span className="font-semibold text-ink">
-                  {rider?.current_zone ?? mockRider.currentZone}
+                  {activeRider.currentZone}
                 </span>
               </div>
               <div className="flex items-center justify-between">

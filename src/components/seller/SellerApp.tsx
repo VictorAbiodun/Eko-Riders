@@ -34,26 +34,33 @@ export function SellerApp() {
   const { user, profile, seller, signOut } = useAuth()
 
   // Fallback mock if not logged in
-  const mockSeller = sellers.find((s) => s.name === 'Adunni Okafor')
+  const mockSeller =
+    sellers.find((s) => s.name === 'Adunni Okafor') ?? sellers[0]
 
-  const sellerBusinessName =
-    seller?.business_name ?? mockSeller?.businessName ?? 'Seller Dashboard'
+  // Use logged-in seller data when authenticated, or fallback to mock in demo mode
+  const activeSeller = user
+    ? {
+        id: seller?.id ?? user.id,
+        name: profile?.full_name ?? user.user_metadata?.full_name ?? 'Seller',
+        phone: seller?.phone ?? profile?.phone ?? '',
+        businessName:
+          seller?.business_name ??
+          user.user_metadata?.business_name ??
+          `${profile?.full_name ?? 'My'} Business`,
+        area: seller?.area ?? user.user_metadata?.area ?? 'Ikeja',
+        totalOrders: 0,
+      }
+    : mockSeller
+
+  const sellerBusinessName = activeSeller.businessName
 
   const [activeTab, setActiveTab] = useState('home')
 
   // Drill-down state for Order Details
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
 
-  if (!mockSeller) return null
-
-  // If viewing a specific order detail, hide the shell/tabs and show detail full-screen on mobile,
-  // or inside the shell on desktop? The prompt says "swap the bottom tab bar for a left sidebar nav".
-  // For simplicity, we can render SellerOrderDetail inside the shell.
-  // Wait, in Rider app, Detail is full screen. Let's make it consistent, but for Seller, desktop sidebar is always visible.
-  // We can just render the detail view inside the shell.
-
   const titles: Record<string, string> = {
-    home: mockSeller.businessName,
+    home: activeSeller.businessName,
     orders: 'Orders',
     create: 'Create Order',
     payments: 'Payments',
@@ -128,7 +135,7 @@ export function SellerApp() {
         <>
           {activeTab === 'home' && (
             <SellerHome
-              seller={mockSeller}
+              seller={activeSeller}
               onNavigateToCreate={() => setActiveTab('create')}
               onSelectOrder={setSelectedOrderId}
             />
@@ -136,19 +143,19 @@ export function SellerApp() {
 
           {activeTab === 'orders' && (
             <SellerOrders
-              seller={mockSeller}
+              seller={activeSeller}
               onSelectOrder={setSelectedOrderId}
             />
           )}
 
           {activeTab === 'create' && (
             <SellerCreateOrder
-              seller={mockSeller}
+              seller={activeSeller}
               onSuccess={handleCreateOrderSuccess}
             />
           )}
 
-          {activeTab === 'payments' && <SellerPayments seller={mockSeller} />}
+          {activeTab === 'payments' && <SellerPayments seller={activeSeller} />}
 
           {activeTab === 'settings' && (
             <div className="p-4 md:p-8 max-w-lg space-y-4">
@@ -161,7 +168,7 @@ export function SellerApp() {
                     <span className="font-medium text-neutral-400">
                       Account:
                     </span>{' '}
-                    {profile?.full_name ?? mockSeller.name}
+                    {activeSeller.name}
                   </p>
                   <p>
                     <span className="font-medium text-neutral-400">Email:</span>{' '}
