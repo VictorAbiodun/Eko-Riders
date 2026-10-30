@@ -48,14 +48,14 @@ Decided 2026-10-30:
 | Product name | **Eko Riders** | The demo UI still says "ShipFast"; renaming is a Phase 0 task |
 | Backend | **Supabase** | Postgres, Auth, Realtime, Storage, Row Level Security. Separate staging and production projects |
 | Payments | **Paystack** (picked for ease of use) | No setup or monthly fee. Pays only when money moves: local cards and transfers cost 1.5% + ₦100 (the ₦100 is waived under ₦2,500, fee capped at ₦2,000); payouts cost ₦10 (up to ₦5,000), ₦25 (₦5,001–₦50,000), ₦50 (above that). Source: paystack.com/pricing, checked 2026-10-30. "Free" means free to start, not free per transaction |
+| Sign-up | **Supabase Auth** (Victor first preferred Firebase, then agreed) | One auth system. Firebase phone-SMS is not on its free plan (needs pay-as-you-go Blaze with a billing card) and would add a second login system. Email and Google sign-in are free; phone OTP is added through the Send SMS hook with a Nigerian SMS provider once SMS budget is agreed |
+| Pilot zone | **Ikeja** | Mainland; includes Computer Village for electronics sellers. Recruit 3–5 sellers and 5–10 riders there |
 | Maps | **MapLibre GL JS** (open source) with **OpenFreeMap** tiles over OpenStreetMap data | No API key, no bill. OpenFreeMap says its public service is "as-is" with no guarantee, so keep the tile URL in config and plan to self-host or switch if usage grows. Address entry in v1 is pin-drop plus a typed landmark, with no paid geocoder |
 
 Still open:
 
 | Topic | Status |
 |---|---|
-| Sign-up method | **Open.** Victor chose Firebase. Concerns found on 2026-10-30: Firebase phone SMS is not on the free Spark plan (needs the pay-as-you-go Blaze plan with a billing card); it adds a second auth system next to Supabase; and the Supabase article I read described Firebase support as early access, so check the current Supabase docs before relying on it. Recommended: Supabase Auth for v1, with phone OTP added through Supabase's Send SMS hook and a Nigerian SMS provider. Awaiting Victor's confirmation |
-| Pilot zone | **Open.** Choose where 3–5 sellers and 5–10 riders Victor can personally recruit are already close together, so that deliveries are short and he can visit in person. If there is no obvious answer, default to Yaba and its neighbours (Surulere, Akoka): dense, mainland, many small sellers |
 | Legal documents | **Open, explained below.** Needed before the pilot, not before Phase 0 |
 
 ### What "legal documents" means here
@@ -88,7 +88,7 @@ Work in order. Each phase ends in something you can demo. Do not start a phase u
 - [ ] Create the Supabase project (separate **staging** and **production** projects)
 - [ ] Design and migrate the schema (see section 4); keep migrations in `supabase/migrations/` under version control
 - [ ] Turn on Row Level Security for **every** table before any data goes in
-- [ ] Auth: **method pending Victor's confirmation (see section 2)**. Plan A: Supabase Auth, phone OTP through the Send SMS hook and a Nigerian SMS provider (Termii or similar) for sellers and riders; email + password + 2FA for admins
+- [ ] Auth: Supabase Auth (decided). Phone OTP through the Send SMS hook and a Nigerian SMS provider (Termii or similar) for sellers and riders; email + password + 2FA for admins
 - [ ] Roles: `admin`, `ops`, `seller`, `rider`. Roles live in a server-side table, never in client-editable metadata
 - [ ] Invite flow for riders and admins; seller self-signup with admin approval
 - [ ] Seed script that loads the current mock data into **staging only**
@@ -251,5 +251,6 @@ Current TypeScript types map onto this: `Order`, `Seller`, `Rider`, `Customer`, 
 
 ## 7. Change log
 
-- 2026-10-30: Decisions recorded: name Eko Riders, Supabase, Paystack, MapLibre + OpenFreeMap. Sign-up method, pilot zone and legal documents still open.
+- 2026-10-30: Sign-up decided: Supabase Auth. Pilot zone decided: Ikeja.
+- 2026-10-30: Decisions recorded: name Eko Riders, Supabase, Paystack, MapLibre + OpenFreeMap. Legal documents still open.
 - 2026-10-30: Audited the codebase and wrote this roadmap. Fixed the broken JSX fragment in `AdminRiders.tsx`; local branch `claude/admin-empty-states-build-fix` is committed but not yet pushed.

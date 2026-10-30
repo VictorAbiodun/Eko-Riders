@@ -19,7 +19,7 @@ Shared UI: `src/components/ui/`, `src/components/shell/`, `src/components/orders
 
 ## 2. Stack and commands
 
-React 19, TypeScript (strict), Vite 8, Tailwind CSS 4, lucide-react icons. Decided services: **Supabase** (database, auth, realtime), **Paystack** (payments and payouts), **MapLibre GL JS + OpenFreeMap** (maps). The sign-up method is still open, see `progress.md` section 2. No router, state library or test runner is installed yet; add them only as the roadmap calls for them.
+React 19, TypeScript (strict), Vite 8, Tailwind CSS 4, lucide-react icons. Decided services: **Supabase** (database, auth, realtime), **Paystack** (payments and payouts), **MapLibre GL JS + OpenFreeMap** (maps). Sign-up uses **Supabase Auth** (no Firebase). Pilot zone is Ikeja, Lagos. No router, state library or test runner is installed yet; add them only as the roadmap calls for them.
 
 ```bash
 npm ci              # install from the lockfile (never `npm install` to "fix" things)
