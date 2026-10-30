@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { navigate } from '../lib/navigation'
 
 interface DemoCard {
   title: string
@@ -73,6 +74,10 @@ function DemoCardItem({ card }: { card: DemoCard }) {
   return (
     <a
       href={card.href}
+      onClick={(e) => {
+        e.preventDefault()
+        navigate(card.href)
+      }}
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:scale-[0.98]"
     >
       {/* Accent stripe */}
@@ -159,6 +164,10 @@ export function LandingPage() {
             ) : (
               <a
                 href="/login"
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigate('/login')
+                }}
                 className="flex min-h-touch items-center gap-1.5 rounded-xl border border-neutral-300 bg-white px-3.5 text-xs font-bold text-ink shadow-2xs transition-colors hover:border-brand hover:bg-neutral-50"
               >
                 Sign in

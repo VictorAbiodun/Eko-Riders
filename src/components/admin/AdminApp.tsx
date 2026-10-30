@@ -11,6 +11,7 @@ import {
 import { ResponsiveShell } from '../shell/ResponsiveShell'
 import type { TabItem } from '../shell/TabBar'
 import { useAuth } from '../../context/AuthContext'
+import { navigate } from '../../lib/navigation'
 import { AdminOperations } from './AdminOperations'
 import { AdminOrders } from './AdminOrders'
 import { AdminRiders } from './AdminRiders'
@@ -80,6 +81,10 @@ export function AdminApp() {
       ) : (
         <a
           href="/login/admin"
+          onClick={(e) => {
+            e.preventDefault()
+            navigate('/login/admin')
+          }}
           className="text-xs font-semibold text-accent hover:underline"
         >
           Sign in

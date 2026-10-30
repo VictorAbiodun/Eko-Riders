@@ -9,6 +9,7 @@ import { AppProvider } from './context/AppContext'
 import { AuthProvider } from './context/AuthContext'
 import { LandingPage } from './components/LandingPage'
 import { LoginPage } from './components/auth/LoginPage'
+import { navigate } from './lib/navigation'
 
 /* ─── Lightweight pathname router ─── */
 
@@ -73,8 +74,7 @@ function AppContent({ path }: { path: string }) {
       <LoginPage
         initialRole={roleParam}
         onCancel={() => {
-          window.history.pushState({}, '', '/')
-          window.dispatchEvent(new PopStateEvent('popstate'))
+          navigate('/')
         }}
         onSuccess={() => {
           const target =
@@ -83,8 +83,7 @@ function AppContent({ path }: { path: string }) {
               : roleParam === 'admin'
                 ? '/admin'
                 : '/seller'
-          window.history.pushState({}, '', target)
-          window.dispatchEvent(new PopStateEvent('popstate'))
+          navigate(target)
         }}
       />
     )

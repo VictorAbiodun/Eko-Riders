@@ -12,6 +12,7 @@ import { ResponsiveShell } from '../shell/ResponsiveShell'
 import type { TabItem } from '../shell/TabBar'
 import { useAppData } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
+import { navigate } from '../../lib/navigation'
 
 // Screens
 import { SellerHome } from './SellerHome'
@@ -91,6 +92,10 @@ export function SellerApp() {
       ) : (
         <a
           href="/login"
+          onClick={(e) => {
+            e.preventDefault()
+            navigate('/login')
+          }}
           className="text-xs font-semibold text-brand hover:underline"
         >
           Sign in
@@ -183,6 +188,10 @@ export function SellerApp() {
                 ) : (
                   <a
                     href="/login"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      navigate('/login')
+                    }}
                     className="mt-4 flex w-full min-h-touch items-center justify-center gap-2 rounded-xl bg-brand text-sm font-bold text-ink shadow-xs transition-colors hover:bg-brand-600"
                   >
                     <span>Sign in with live account</span>

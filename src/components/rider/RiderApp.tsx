@@ -3,6 +3,7 @@ import { Home, Package, Banknote, User as UserIcon, LogOut } from 'lucide-react'
 import { MobileShell, type TabItem } from '../shell/MobileShell'
 import { useAppData } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
+import { navigate } from '../../lib/navigation'
 
 // Screens
 import { RiderHome } from './RiderHome'
@@ -122,6 +123,10 @@ export function RiderApp() {
           ) : (
             <a
               href="/login/rider"
+              onClick={(e) => {
+                e.preventDefault()
+                navigate('/login/rider')
+              }}
               className="flex w-full min-h-touch items-center justify-center gap-2 rounded-xl bg-brand text-sm font-bold text-ink shadow-xs transition-colors hover:bg-brand-600"
             >
               <span>Sign in with live account</span>
