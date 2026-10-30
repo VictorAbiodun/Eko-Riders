@@ -104,8 +104,8 @@ function AppContent({ path }: { path: string }) {
     )
   }
 
-  // /track/ORD-XXXXXX → standalone tracking page
-  const trackMatch = path.match(/^\/track\/(ORD-\d+)$/i)
+  // /track/:idOrToken → standalone customer tracking page
+  const trackMatch = path.match(/^\/track\/([a-zA-Z0-9_-]+)$/i)
   if (trackMatch) {
     return (
       <AppProvider>

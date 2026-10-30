@@ -1,8 +1,15 @@
 import { useState } from 'react'
-import { CheckCircle2, Package, MapPin, User, Banknote } from 'lucide-react'
-import type { Seller, Order } from '../../data/types'
+import {
+  CheckCircle2,
+  Package,
+  MapPin,
+  User,
+  Banknote,
+  Loader2,
+  AlertCircle,
+} from 'lucide-react'
+import type { Seller } from '../../data/types'
 import { useAppData } from '../../context/AppContext'
-import { nextOrderId } from '../../data/mockData'
 
 interface SellerCreateOrderProps {
   seller: Seller
@@ -13,7 +20,7 @@ export function SellerCreateOrder({
   seller,
   onSuccess,
 }: SellerCreateOrderProps) {
-  const { orders, setOrders } = useAppData()
+  const { createOrder } = useAppData()
 
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
@@ -24,35 +31,47 @@ export function SellerCreateOrder({
     'PREPAID',
   )
 
+  const [submitting, setSubmitting] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [createdOrderNumber, setCreatedOrderNumber] = useState<string | null>(
+    null,
+  )
 
   const deliveryFee = 1500
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitting(true)
+    setErrorMsg(null)
 
-    const newOrderId = nextOrderId(orders.map((o) => o.id))
+    const cod = paymentMethod === 'COD' ? Number(packageValue) + deliveryFee : 0
 
-    const newOrder: Order = {
-      id: newOrderId,
-      status: 'NEW',
-      sellerName: seller.businessName,
-      customerName,
-      customerAddress,
-      riderName: null,
-      productDescription,
-      codAmount:
-        paymentMethod === 'COD' ? Number(packageValue) + deliveryFee : 0,
+    const { error, orderId } = await createOrder({
+      customerName: customerName.trim(),
+      customerPhone: customerPhone.trim(),
+      customerAddress: customerAddress.trim(),
+      dropoffArea: seller.area,
+      productDescription: productDescription.trim(),
+      packageValue: Number(packageValue) || 0,
+      codAmount: cod,
       deliveryFee,
-      createdAt: new Date().toISOString(),
+      sellerName: seller.businessName,
+    })
+
+    setSubmitting(false)
+
+    if (error) {
+      setErrorMsg(error.message)
+      return
     }
 
-    setOrders((prev) => [newOrder, ...prev])
+    setCreatedOrderNumber(orderId ?? null)
     setShowSuccess(true)
 
     setTimeout(() => {
       onSuccess()
-    }, 2000)
+    }, 2200)
   }
 
   if (showSuccess) {
@@ -64,8 +83,13 @@ export function SellerCreateOrder({
         <h2 className="font-heading text-2xl font-bold text-ink">
           Order Created!
         </h2>
-        <p className="mt-2 text-neutral-500">
-          Your order has been saved and will be assigned to a rider shortly.
+        {createdOrderNumber && (
+          <p className="mt-2 font-data text-xl font-black text-brand-700">
+            {createdOrderNumber}
+          </p>
+        )}
+        <p className="mt-2 text-sm text-neutral-500">
+          Your delivery has been logged in Supabase and is ready for dispatch.
         </p>
       </div>
     )
@@ -224,11 +248,26 @@ export function SellerCreateOrder({
           </div>
         </div>
 
+        {errorMsg && (
+          <div className="flex items-start gap-2.5 rounded-xl border border-status-danger-border bg-status-danger-bg p-3 text-sm text-status-danger">
+            <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+            <p>{errorMsg}</p>
+          </div>
+        )}
+
         <button
           type="submit"
-          className="flex min-h-touch w-full items-center justify-center rounded-xl bg-ink px-4 py-3 text-base font-bold text-white shadow-sm transition-colors hover:bg-neutral-800 active:scale-[0.98]"
+          disabled={submitting}
+          className="flex min-h-touch w-full items-center justify-center gap-2 rounded-xl bg-ink px-4 py-3 text-base font-bold text-white shadow-sm transition-colors hover:bg-neutral-800 active:scale-[0.98] disabled:opacity-50"
         >
-          Create Order
+          {submitting ? (
+            <>
+              <Loader2 className="h-5 w-5 animate-spin" />
+              <span>Creating Order…</span>
+            </>
+          ) : (
+            <span>Create Order</span>
+          )}
         </button>
       </form>
     </div>

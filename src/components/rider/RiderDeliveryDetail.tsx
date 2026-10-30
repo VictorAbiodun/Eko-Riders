@@ -36,7 +36,7 @@ export function RiderDeliveryDetail({
   orderId,
   onBack,
 }: RiderDeliveryDetailProps) {
-  const { orders, setOrders } = useAppData()
+  const { orders, updateOrderStatus } = useAppData()
   const order = orders.find((o) => o.id === orderId)
 
   const [showOtp, setShowOtp] = useState(false)
@@ -46,9 +46,7 @@ export function RiderDeliveryDetail({
   if (!order) return null
 
   const updateStatus = (newStatus: OrderStatus) => {
-    setOrders((prev) =>
-      prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)),
-    )
+    updateOrderStatus(orderId, newStatus)
   }
 
   const handleAction = () => {

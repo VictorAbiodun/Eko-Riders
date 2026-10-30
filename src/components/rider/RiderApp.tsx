@@ -121,9 +121,9 @@ export function RiderApp() {
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span>Database session</span>
+                <span>Account status</span>
                 <span className="font-semibold text-status-success uppercase text-[10px]">
-                  {user ? 'Live Supabase' : 'Demo Mode'}
+                  Active
                 </span>
               </div>
             </div>
@@ -139,16 +139,13 @@ export function RiderApp() {
               <span>Sign out</span>
             </button>
           ) : (
-            <a
-              href="/login/rider"
-              onClick={(e) => {
-                e.preventDefault()
-                navigate('/login/rider')
-              }}
+            <button
+              type="button"
+              onClick={() => navigate('/login')}
               className="flex w-full min-h-touch items-center justify-center gap-2 rounded-xl bg-brand text-sm font-bold text-ink shadow-xs transition-colors hover:bg-brand-600"
             >
-              <span>Sign in with live account</span>
-            </a>
+              <span>Sign in</span>
+            </button>
           )}
         </div>
       )}

@@ -6,9 +6,6 @@ import {
   AlertCircle,
   CheckCircle2,
   ArrowRight,
-  Store,
-  Bike,
-  Shield,
   Loader2,
   ChevronLeft,
   User as UserIcon,
@@ -24,38 +21,6 @@ interface LoginPageProps {
   onSuccess?: () => void
   onCancel?: () => void
 }
-
-interface DemoAccount {
-  name: string
-  role: UserRole
-  roleLabel: string
-  email: string
-  icon: typeof Store
-}
-
-const DEMO_ACCOUNTS: DemoAccount[] = [
-  {
-    name: 'Adunni Okafor',
-    role: 'seller',
-    roleLabel: 'Seller (Fashion Hub)',
-    email: 'adunni@example.com',
-    icon: Store,
-  },
-  {
-    name: 'Ibrahim Musa',
-    role: 'rider',
-    roleLabel: 'Rider (Yaba Zone)',
-    email: 'ibrahim@example.com',
-    icon: Bike,
-  },
-  {
-    name: 'Ops Dispatch',
-    role: 'admin',
-    roleLabel: 'Admin / Operations',
-    email: 'admin@example.com',
-    icon: Shield,
-  },
-]
 
 const LAGOS_AREAS = [
   'Ikeja',
@@ -78,24 +43,16 @@ export function LoginPage({
   onSuccess,
   onCancel,
 }: LoginPageProps) {
-  const {
-    signInWithEmail,
-    signUpWithEmail,
-    signInDemo,
-    error: authError,
-  } = useAuth()
+  const { signInWithEmail, signUpWithEmail, error: authError } = useAuth()
 
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode)
-  const [selectedRole, setSelectedRole] = useState<UserRole>(
-    initialRole === 'admin' ? 'seller' : initialRole,
+  const [selectedRole, setSelectedRole] = useState<'seller' | 'rider'>(
+    initialRole === 'rider' ? 'rider' : 'seller',
   )
 
-  // Shared fields
-  const [email, setEmail] = useState(() => {
-    const defaultAcc = DEMO_ACCOUNTS.find((a) => a.role === initialRole)
-    return defaultAcc?.email ?? 'adunni@example.com'
-  })
-  const [password, setPassword] = useState('Password123!')
+  // Auth fields
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   // Sign up fields
   const [fullName, setFullName] = useState('')
@@ -110,24 +67,16 @@ export function LoginPage({
   const [localError, setLocalError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
-  const handleRoleSelect = (role: UserRole) => {
+  const handleRoleSelect = (role: 'seller' | 'rider') => {
     setSelectedRole(role)
     setLocalError(null)
     setSuccessMessage(null)
-    const acc = DEMO_ACCOUNTS.find((a) => a.role === role)
-    if (acc && mode === 'signin') {
-      setEmail(acc.email)
-      setPassword('Password123!')
-    }
   }
 
   const handleModeSwitch = (newMode: 'signin' | 'signup') => {
     setMode(newMode)
     setLocalError(null)
     setSuccessMessage(null)
-    if (newMode === 'signup' && selectedRole === 'admin') {
-      setSelectedRole('seller')
-    }
   }
 
   const handleSubmit = async (e: FormEvent) => {
@@ -159,13 +108,12 @@ export function LoginPage({
         return
       }
 
-      const roleToRegister = selectedRole === 'rider' ? 'rider' : 'seller'
       const { error, needsEmailConfirmation } = await signUpWithEmail({
         email: email.trim(),
         password,
         fullName: fullName.trim(),
         phone: phone.trim(),
-        role: roleToRegister,
+        role: selectedRole,
         businessName: businessName.trim() || undefined,
         area,
         vehicleType,
@@ -179,17 +127,16 @@ export function LoginPage({
           error.message.toLowerCase().includes('email')
         ) {
           setLocalError(
-            'Email rate limit reached (Supabase default mailer is capped at ~3 emails/hour). In your Supabase Dashboard -> Authentication -> Providers -> Email, turn OFF "Confirm email" to allow unlimited instant signups!',
+            'Email rate limit reached. In Supabase Dashboard -> Authentication -> Providers -> Email, turn OFF "Confirm email" to enable instant signups.',
           )
         } else {
           setLocalError(error.message)
         }
       } else if (needsEmailConfirmation) {
         setSuccessMessage(
-          'Account registered! Please check your email inbox to confirm your account and sign in.',
+          'Account created! Please check your email inbox to confirm your account and sign in.',
         )
       } else {
-        // Logged in immediately
         onSuccess?.()
       }
     } else {
@@ -198,35 +145,10 @@ export function LoginPage({
       setLoading(false)
 
       if (error) {
-        const demoMatch = DEMO_ACCOUNTS.find(
-          (a) => a.email.toLowerCase() === email.trim().toLowerCase(),
-        )
-        if (demoMatch && password === 'Password123!') {
-          signInDemo(demoMatch.role, demoMatch.name, demoMatch.email)
-          onSuccess?.()
-        } else {
-          setLocalError(error.message)
-        }
+        setLocalError(error.message)
       } else {
         onSuccess?.()
       }
-    }
-  }
-
-  const handleQuickDemo = async (acc: DemoAccount) => {
-    setSelectedRole(acc.role)
-    setEmail(acc.email)
-    setPassword('Password123!')
-    setLocalError(null)
-    setSuccessMessage(null)
-    setLoading(true)
-    const { error } = await signInWithEmail(acc.email, 'Password123!')
-    setLoading(false)
-    if (error) {
-      signInDemo(acc.role, acc.name, acc.email)
-      onSuccess?.()
-    } else {
-      onSuccess?.()
     }
   }
 
@@ -242,7 +164,7 @@ export function LoginPage({
             className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-neutral-600 hover:text-ink transition-colors"
           >
             <ChevronLeft className="h-4 w-4" />
-            Back to demo hub
+            Back to home
           </button>
         )}
 
@@ -290,35 +212,29 @@ export function LoginPage({
           </button>
         </div>
 
-        {/* Role Pills */}
-        <div className="mt-3 flex rounded-xl bg-neutral-200/50 p-1">
-          {(mode === 'signup'
-            ? (['seller', 'rider'] as UserRole[])
-            : (['seller', 'rider', 'admin'] as UserRole[])
-          ).map((r) => {
-            const isCurrent = selectedRole === r
-            const label =
-              r === 'seller'
-                ? 'Seller / SME'
-                : r === 'rider'
-                  ? 'Delivery Rider'
-                  : 'Admin'
-            return (
-              <button
-                key={r}
-                type="button"
-                onClick={() => handleRoleSelect(r)}
-                className={`flex-1 rounded-lg py-1.5 text-xs font-semibold tracking-wide transition-all ${
-                  isCurrent
-                    ? 'bg-white text-ink shadow-xs'
-                    : 'text-neutral-500 hover:text-neutral-900'
-                }`}
-              >
-                {label}
-              </button>
-            )
-          })}
-        </div>
+        {/* Role Pills (for Create Account mode) */}
+        {mode === 'signup' && (
+          <div className="mt-3 flex rounded-xl bg-neutral-200/50 p-1">
+            {(['seller', 'rider'] as const).map((r) => {
+              const isCurrent = selectedRole === r
+              const label = r === 'seller' ? 'Seller / SME' : 'Delivery Rider'
+              return (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => handleRoleSelect(r)}
+                  className={`flex-1 rounded-lg py-1.5 text-xs font-semibold tracking-wide transition-all ${
+                    isCurrent
+                      ? 'bg-white text-ink shadow-xs'
+                      : 'text-neutral-500 hover:text-neutral-900'
+                  }`}
+                >
+                  {label}
+                </button>
+              )
+            })}
+          </div>
+        )}
       </div>
 
       <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-md">
@@ -395,7 +311,7 @@ export function LoginPage({
                       htmlFor="businessName"
                       className="block text-xs font-semibold uppercase tracking-wider text-neutral-600"
                     >
-                      Business / Brand Name
+                      Business / Store Name
                     </label>
                     <div className="relative mt-1.5">
                       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-neutral-400">
@@ -420,7 +336,7 @@ export function LoginPage({
                     className="block text-xs font-semibold uppercase tracking-wider text-neutral-600"
                   >
                     {selectedRole === 'seller'
-                      ? 'Pickup Area'
+                      ? 'Pickup Area in Lagos'
                       : 'Primary Delivery Zone'}
                   </label>
                   <div className="relative mt-1.5">
@@ -463,7 +379,7 @@ export function LoginPage({
                         className="block w-full min-h-touch rounded-xl border border-neutral-300 bg-white px-3.5 text-sm text-ink focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all"
                       >
                         <option value="bike">
-                          Motorcycle / Bike (Dispatch)
+                          Motorcycle / Bike (Standard Dispatch)
                         </option>
                         <option value="bicycle">Bicycle</option>
                         <option value="van">Delivery Van</option>
@@ -493,7 +409,7 @@ export function LoginPage({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@example.com"
+                  placeholder="your.email@example.com"
                   className="block w-full min-h-touch rounded-xl border border-neutral-300 bg-white pl-10 pr-3.5 text-sm text-ink placeholder-neutral-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all"
                 />
               </div>
@@ -583,44 +499,6 @@ export function LoginPage({
               </p>
             )}
           </div>
-
-          {/* Quick Demo Logins (Shown in Sign In mode) */}
-          {mode === 'signin' && (
-            <div className="mt-6 border-t border-neutral-100 pt-5">
-              <p className="text-center text-xs font-semibold uppercase tracking-wider text-neutral-400">
-                One-click demo sign in
-              </p>
-              <div className="mt-3 space-y-2">
-                {DEMO_ACCOUNTS.map((acc) => {
-                  const Icon = acc.icon
-                  return (
-                    <button
-                      key={acc.email}
-                      type="button"
-                      disabled={loading}
-                      onClick={() => handleQuickDemo(acc)}
-                      className="flex w-full min-h-touch items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2 text-left text-xs font-medium text-ink transition-colors hover:border-brand hover:bg-white active:bg-neutral-100 disabled:opacity-50"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white shadow-xs">
-                          <Icon className="h-3.5 w-3.5 text-brand" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-ink">{acc.name}</p>
-                          <p className="text-[11px] text-neutral-500">
-                            {acc.roleLabel}
-                          </p>
-                        </div>
-                      </div>
-                      <span className="font-data text-[10px] text-neutral-400">
-                        Tap to test
-                      </span>
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

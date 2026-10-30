@@ -1,23 +1,14 @@
-import { AlertTriangle, RotateCcw } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { AlertTriangle, RotateCcw, Loader2 } from 'lucide-react'
 import { useAppData } from '../../context/AppContext'
-import type { OrderStatus } from '../../data/types'
+import type { Order, OrderStatus } from '../../data/types'
 import { MapGraphic } from '../ui/MapGraphic'
 import { TrackingStepper } from '../orders/TrackingStepper'
 import { RiderCard } from './RiderCard'
 import { OrderSummaryCard } from './OrderSummaryCard'
 import { EmptyState } from '../ui/EmptyState'
-
-/* ─── Demo order links ─── */
-
-const DEMO_ORDERS = [
-  { id: 'ORD-000006', tag: 'New' },
-  { id: 'ORD-000004', tag: 'Assigned' },
-  { id: 'ORD-000003', tag: 'Picked up' },
-  { id: 'ORD-000002', tag: 'En route' },
-  { id: 'ORD-000001', tag: 'Delivered' },
-  { id: 'ORD-000007', tag: 'Failed' },
-  { id: 'ORD-000008', tag: 'Returned' },
-]
+import { navigate } from '../../lib/navigation'
+import { supabase, isSupabaseConfigured } from '../../lib/supabase'
 
 /* ─── Helpers ─── */
 
@@ -60,15 +51,24 @@ function TrackingHeader() {
         boxShadow: '0 1px 8px -2px rgba(30, 28, 26, 0.06)',
       }}
     >
-      <div className="flex items-center gap-2">
-        <img
-          src="/icons/icon-512.png"
-          alt="Eko Riders"
-          className="h-7 w-7 rounded-md object-cover"
-        />
-        <span className="font-heading text-base font-bold tracking-tight text-ink">
-          Eko Riders
-        </span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <img
+            src="/icons/icon-512.png"
+            alt="Eko Riders"
+            className="h-7 w-7 rounded-md object-cover"
+          />
+          <span className="font-heading text-base font-bold tracking-tight text-ink">
+            Eko Riders
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+          className="text-xs font-semibold text-neutral-500 hover:text-ink transition-colors"
+        >
+          Home
+        </button>
       </div>
     </header>
   )
@@ -78,16 +78,10 @@ function FailedStatusCard({ status }: { status: OrderStatus }) {
   const isFailed = status === 'FAILED'
 
   return (
-    <div
-      className={`mx-5 mt-5 rounded-2xl border p-5 ${
-        isFailed
-          ? 'border-status-danger-border bg-status-danger-bg'
-          : 'border-status-warning-border bg-status-warning-bg'
-      }`}
-    >
-      <div className="flex items-start gap-3">
+    <div className="mx-5 mt-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs">
+      <div className="flex items-start gap-3.5">
         <div
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
             isFailed ? 'bg-status-danger-bg' : 'bg-status-warning-bg'
           }`}
         >
@@ -124,10 +118,19 @@ function FailedStatusCard({ status }: { status: OrderStatus }) {
 
 function OrderNotFound({ orderId }: { orderId: string }) {
   return (
-    <EmptyState
-      title="Order not found"
-      description={`We couldn't find an order with ID ${orderId}. Please check the link and try again.`}
-    />
+    <div className="p-6 text-center">
+      <EmptyState
+        title="Order not found"
+        description={`We couldn't find an order matching "${orderId}". Please check the tracking link or order number and try again.`}
+      />
+      <button
+        type="button"
+        onClick={() => navigate('/')}
+        className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-brand px-4 py-2 text-xs font-bold text-ink shadow-xs transition-colors hover:bg-brand-600"
+      >
+        Track another order
+      </button>
+    </div>
   )
 }
 
@@ -139,37 +142,9 @@ function TrackingFooter() {
         <span className="font-semibold text-neutral-500">Eko Riders</span>
       </p>
       <p className="mt-0.5 text-xs text-neutral-400">
-        Last-mile delivery for Nigerian businesses
+        Fast, dependable last-mile delivery across Lagos
       </p>
     </footer>
-  )
-}
-
-function DemoNav({ currentId }: { currentId: string }) {
-  return (
-    <div className="mx-5 mt-6 rounded-2xl border border-dashed border-neutral-300 bg-neutral-50 p-4">
-      <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-neutral-400">
-        Demo — try other orders
-      </p>
-      <div className="flex flex-wrap gap-1.5">
-        {DEMO_ORDERS.map((o) => {
-          const isActive = o.id === currentId
-          return (
-            <a
-              key={o.id}
-              href={`/track/${o.id}`}
-              className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors ${
-                isActive
-                  ? 'border-brand bg-brand-100 text-brand-800'
-                  : 'border-neutral-200 bg-white text-neutral-600 active:bg-neutral-50'
-              }`}
-            >
-              {o.tag}
-            </a>
-          )
-        })}
-      </div>
-    </div>
   )
 }
 
@@ -181,7 +156,53 @@ interface TrackingPageProps {
 
 export function TrackingPage({ orderId }: TrackingPageProps) {
   const { orders, riders } = useAppData()
-  const order = orders.find((o) => o.id === orderId)
+  const localOrder = orders.find((o) => o.id === orderId)
+
+  const [remoteOrder, setRemoteOrder] = useState<Order | null>(null)
+  const [searchingRemote, setSearchingRemote] = useState(false)
+
+  // Direct remote fetch if not found in local cache
+  useEffect(() => {
+    let active = true
+
+    async function fetchRemote() {
+      if (!localOrder && supabase && isSupabaseConfigured) {
+        setSearchingRemote(true)
+        try {
+          const { data, error } = await supabase.rpc('get_tracking_order', {
+            p_query: orderId,
+          })
+          if (active && !error && data && (data as any[]).length > 0) {
+            const row = (data as any[])[0]
+            setRemoteOrder({
+              id: row.order_number,
+              status: row.status as OrderStatus,
+              sellerName: row.seller_business_name,
+              customerName: row.customer_name,
+              customerAddress: row.dropoff_address,
+              riderName: row.rider_name ?? null,
+              productDescription: row.product_description,
+              codAmount: Math.round((row.cod_amount_kobo || 0) / 100),
+              deliveryFee: Math.round((row.delivery_fee_kobo || 0) / 100),
+              createdAt: row.created_at,
+            })
+          }
+        } catch (err) {
+          console.warn('Could not query remote order:', err)
+        } finally {
+          if (active) setSearchingRemote(false)
+        }
+      }
+    }
+
+    fetchRemote()
+
+    return () => {
+      active = false
+    }
+  }, [localOrder, orderId])
+
+  const order = localOrder ?? remoteOrder
 
   const isTerminal = order ? TERMINAL_STATUSES.includes(order.status) : false
 
@@ -202,11 +223,15 @@ export function TrackingPage({ orderId }: TrackingPageProps) {
       <div className="flex w-full flex-col md:max-w-[440px] md:overflow-hidden md:rounded-2xl md:border md:border-neutral-200 md:bg-neutral-50 md:shadow-sm">
         <TrackingHeader />
 
-        {!order ? (
-          <>
-            <OrderNotFound orderId={orderId} />
-            <DemoNav currentId={orderId} />
-          </>
+        {searchingRemote ? (
+          <div className="flex flex-col items-center justify-center p-12 text-center">
+            <Loader2 className="h-8 w-8 animate-spin text-brand" />
+            <p className="mt-3 text-xs font-semibold text-neutral-500">
+              Retrieving live parcel status…
+            </p>
+          </div>
+        ) : !order ? (
+          <OrderNotFound orderId={orderId} />
         ) : (
           <>
             {/* ── Map card ── */}
@@ -248,9 +273,6 @@ export function TrackingPage({ orderId }: TrackingPageProps) {
             <div className="mt-2 mb-6">
               <OrderSummaryCard order={order} />
             </div>
-
-            {/* ── Demo navigation ── */}
-            <DemoNav currentId={orderId} />
           </>
         )}
 

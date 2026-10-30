@@ -172,15 +172,15 @@ export function SellerApp() {
                   </p>
                   <p>
                     <span className="font-medium text-neutral-400">Email:</span>{' '}
-                    {user?.email ?? 'adunni@example.com'}
+                    {user?.email ?? 'Not signed in'}
                   </p>
                   <p>
                     <span className="font-medium text-neutral-400">
-                      Session:
+                      Status:
                     </span>{' '}
-                    {user
-                      ? 'Authenticated with Supabase'
-                      : 'Demo Local Session'}
+                    <span className="font-semibold text-status-success">
+                      Active
+                    </span>
                   </p>
                 </div>
                 {user ? (
@@ -193,16 +193,13 @@ export function SellerApp() {
                     <span>Sign out</span>
                   </button>
                 ) : (
-                  <a
-                    href="/login"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      navigate('/login')
-                    }}
+                  <button
+                    type="button"
+                    onClick={() => navigate('/login')}
                     className="mt-4 flex w-full min-h-touch items-center justify-center gap-2 rounded-xl bg-brand text-sm font-bold text-ink shadow-xs transition-colors hover:bg-brand-600"
                   >
-                    <span>Sign in with live account</span>
-                  </a>
+                    <span>Sign in</span>
+                  </button>
                 )}
               </div>
             </div>
