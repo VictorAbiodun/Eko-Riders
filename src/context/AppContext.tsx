@@ -257,7 +257,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       updateOrderStatus,
       refreshOrders: fetchOrders,
     }),
-    [orders, loading, fetchOrders],
+    [orders, loading, fetchOrders, createOrder, updateOrderStatus],
   )
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

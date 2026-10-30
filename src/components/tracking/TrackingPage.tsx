@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AlertTriangle, RotateCcw, Loader2 } from 'lucide-react'
 import { useAppData } from '../../context/AppContext'
 import type { Order, OrderStatus } from '../../data/types'
-import { MapGraphic } from '../ui/MapGraphic'
+import { LagosMap } from '../ui/LagosMap'
 import { TrackingStepper } from '../orders/TrackingStepper'
 import { RiderCard } from './RiderCard'
 import { OrderSummaryCard } from './OrderSummaryCard'
@@ -234,9 +234,14 @@ export function TrackingPage({ orderId }: TrackingPageProps) {
           <OrderNotFound orderId={orderId} />
         ) : (
           <>
-            {/* ── Map card ── */}
+            {/* ── Interactive Lagos Map card ── */}
             <div className="px-5 pt-5">
-              <MapGraphic status={order.status} className="h-[180px]" />
+              <LagosMap
+                pickupAddress={order.sellerName}
+                deliveryAddress={order.customerAddress}
+                status={order.status}
+                height="190px"
+              />
             </div>
 
             {/* ── Order ID hero (centered) ── */}

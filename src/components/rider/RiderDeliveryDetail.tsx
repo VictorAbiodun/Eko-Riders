@@ -11,7 +11,7 @@ import {
 import { useAppData } from '../../context/AppContext'
 import { formatNaira } from '../../data/mockData'
 import type { OrderStatus } from '../../data/types'
-import { MapGraphic } from '../ui/MapGraphic'
+import { LagosMap } from '../ui/LagosMap'
 import { TrackingStepper } from '../orders/TrackingStepper'
 
 interface RiderDeliveryDetailProps {
@@ -218,7 +218,12 @@ export function RiderDeliveryDetail({
       <div className="flex-1 overflow-y-auto">
         {/* Map card */}
         <div className="px-5 pt-5">
-          <MapGraphic status={order.status} className="h-[200px]" />
+          <LagosMap
+            pickupAddress={pickupArea}
+            deliveryAddress={dropoffArea}
+            status={order.status}
+            height="210px"
+          />
         </div>
 
         {/* Order ID centered */}
