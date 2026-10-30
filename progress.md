@@ -136,7 +136,7 @@ Work in order. Each phase ends in something you can demo. Do not start a phase u
 
 ### Phase 5 — Installable app (PWA) (about 3–4 days)
 - [ ] `manifest.webmanifest`: name, short name, `start_url`, `display: standalone`, theme and background colours
-- [ ] Icon set: 192, 512, maskable 512, Apple touch icon, from the danfo artwork (`lagos.png` can seed it)
+- [x] Icon set: 192, 512, maskable 512, Apple touch icon, favicon, in `public/icons/` (done 2026-10-30; SVG masters `icon.svg` and `icon-maskable.svg`). Still to do: reference them from the manifest
 - [ ] Service worker (Vite PWA plugin): cache the app shell; show a friendly offline screen; queue status updates for riders while offline and sync when back online
 - [ ] Install prompt UX: "Add to Home Screen" banner on Android; short instructions for iOS Safari
 - [ ] Separate entry points so riders can install straight to `/rider`, sellers to `/seller` (per-role `start_url` or per-role manifests)
@@ -252,6 +252,7 @@ Current TypeScript types map onto this: `Order`, `Seller`, `Rider`, `Customer`, 
 ## 7. Change log
 
 - 2026-10-30: Phase 0 done locally: renamed to Eko Riders, build errors cleared, dead code removed, ngrok host removed, `.env.example`, CI workflow and README added. Smoke-tested all routes at 360 px with no console errors.
+- 2026-10-30: App icon created (yellow tile, black striped "E" with wheel dot) and linked in `index.html`. Victor confirmed this is a real app, not a demo project.
 - 2026-10-30: Sign-up decided: Supabase Auth. Pilot zone decided: Ikeja.
 - 2026-10-30: Decisions recorded: name Eko Riders, Supabase, Paystack, MapLibre + OpenFreeMap. Legal documents still open.
 - 2026-10-30: Audited the codebase and wrote this roadmap. Fixed the broken JSX fragment in `AdminRiders.tsx`; local branch `claude/admin-empty-states-build-fix` is committed but not yet pushed.
