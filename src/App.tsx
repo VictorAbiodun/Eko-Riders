@@ -6,7 +6,9 @@ import { RiderApp } from './components/rider/RiderApp'
 import { SellerApp } from './components/seller/SellerApp'
 import { AdminApp } from './components/admin/AdminApp'
 import { AppProvider } from './context/AppContext'
+import { AuthProvider } from './context/AuthContext'
 import { LandingPage } from './components/LandingPage'
+import { LoginPage } from './components/auth/LoginPage'
 
 /* ─── Lightweight pathname router ─── */
 
@@ -50,6 +52,43 @@ function LoadingGate({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const path = usePath()
+
+  return (
+    <AuthProvider>
+      <AppContent path={path} />
+    </AuthProvider>
+  )
+}
+
+function AppContent({ path }: { path: string }) {
+  // /login → dedicated authentication page
+  if (path.startsWith('/login')) {
+    const roleParam = path.startsWith('/login/rider')
+      ? 'rider'
+      : path.startsWith('/login/admin')
+        ? 'admin'
+        : 'seller'
+
+    return (
+      <LoginPage
+        initialRole={roleParam}
+        onCancel={() => {
+          window.history.pushState({}, '', '/')
+          window.dispatchEvent(new PopStateEvent('popstate'))
+        }}
+        onSuccess={() => {
+          const target =
+            roleParam === 'rider'
+              ? '/rider'
+              : roleParam === 'admin'
+                ? '/admin'
+                : '/seller'
+          window.history.pushState({}, '', target)
+          window.dispatchEvent(new PopStateEvent('popstate'))
+        }}
+      />
+    )
+  }
 
   // /dev/design-system → token reference sheet, development builds only
   if (import.meta.env.DEV && path.startsWith('/dev/design-system')) {

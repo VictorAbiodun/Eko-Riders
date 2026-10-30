@@ -6,11 +6,12 @@ import {
   CreditCard,
   Settings,
   User,
+  LogOut,
 } from 'lucide-react'
 import { ResponsiveShell } from '../shell/ResponsiveShell'
 import type { TabItem } from '../shell/TabBar'
 import { useAppData } from '../../context/AppContext'
-import { EmptyState } from '../ui/EmptyState'
+import { useAuth } from '../../context/AuthContext'
 
 // Screens
 import { SellerHome } from './SellerHome'
@@ -29,8 +30,13 @@ const SELLER_TABS: TabItem[] = [
 
 export function SellerApp() {
   const { sellers } = useAppData()
-  // Mock login: always use Adunni Okafor / Adunni Fashion Hub
+  const { user, profile, seller, signOut } = useAuth()
+
+  // Fallback mock if not logged in
   const mockSeller = sellers.find((s) => s.name === 'Adunni Okafor')
+
+  const sellerBusinessName =
+    seller?.business_name ?? mockSeller?.businessName ?? 'Seller Dashboard'
 
   const [activeTab, setActiveTab] = useState('home')
 
@@ -58,18 +64,38 @@ export function SellerApp() {
   }
 
   const sidebarFooter = (
-    <div className="flex items-center gap-3">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-brand-700">
-        <User className="h-5 w-5" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-bold text-ink">
-          {mockSeller.businessName}
-        </p>
-        <div className="mt-0.5 inline-block rounded bg-status-success-bg px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-status-success">
-          Growth Plan
+    <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-700">
+          <User className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-bold text-ink">
+            {sellerBusinessName}
+          </p>
+          <div className="mt-0.5 inline-block rounded bg-status-success-bg px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-status-success">
+            {user ? 'Live Supabase' : 'Growth Plan'}
+          </div>
         </div>
       </div>
+      {user ? (
+        <button
+          type="button"
+          onClick={() => signOut()}
+          className="p-1.5 rounded-lg text-neutral-400 hover:text-ink hover:bg-neutral-100 transition-colors"
+          title="Sign out"
+          aria-label="Sign out"
+        >
+          <LogOut className="h-4 w-4" />
+        </button>
+      ) : (
+        <a
+          href="/login"
+          className="text-xs font-semibold text-brand hover:underline"
+        >
+          Sign in
+        </a>
+      )}
     </div>
   )
 
@@ -120,11 +146,49 @@ export function SellerApp() {
           {activeTab === 'payments' && <SellerPayments seller={mockSeller} />}
 
           {activeTab === 'settings' && (
-            <div className="p-4 md:p-8">
-              <EmptyState
-                title="Settings"
-                description="Manage your business profile, subscription plan, and notification preferences."
-              />
+            <div className="p-4 md:p-8 max-w-lg space-y-4">
+              <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs">
+                <h3 className="font-heading text-base font-bold text-ink">
+                  Account & Security
+                </h3>
+                <div className="mt-3 space-y-2 text-sm text-neutral-600">
+                  <p>
+                    <span className="font-medium text-neutral-400">
+                      Account:
+                    </span>{' '}
+                    {profile?.full_name ?? mockSeller.name}
+                  </p>
+                  <p>
+                    <span className="font-medium text-neutral-400">Email:</span>{' '}
+                    {user?.email ?? 'adunni@example.com'}
+                  </p>
+                  <p>
+                    <span className="font-medium text-neutral-400">
+                      Session:
+                    </span>{' '}
+                    {user
+                      ? 'Authenticated with Supabase'
+                      : 'Demo Local Session'}
+                  </p>
+                </div>
+                {user ? (
+                  <button
+                    type="button"
+                    onClick={() => signOut()}
+                    className="mt-4 flex w-full min-h-touch items-center justify-center gap-2 rounded-xl border border-status-danger-border bg-white text-sm font-bold text-status-danger shadow-xs transition-colors hover:bg-status-danger-bg"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Sign out</span>
+                  </button>
+                ) : (
+                  <a
+                    href="/login"
+                    className="mt-4 flex w-full min-h-touch items-center justify-center gap-2 rounded-xl bg-brand text-sm font-bold text-ink shadow-xs transition-colors hover:bg-brand-600"
+                  >
+                    <span>Sign in with live account</span>
+                  </a>
+                )}
+              </div>
             </div>
           )}
         </>

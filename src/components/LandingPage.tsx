@@ -1,5 +1,13 @@
-import { Truck, Store, MapPin, LayoutGrid, ArrowRight } from 'lucide-react'
+import {
+  Truck,
+  Store,
+  MapPin,
+  LayoutGrid,
+  ArrowRight,
+  LogOut,
+} from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 interface DemoCard {
   title: string
@@ -104,23 +112,58 @@ function DemoCardItem({ card }: { card: DemoCard }) {
 }
 
 export function LandingPage() {
+  const { user, profile, signOut } = useAuth()
+
   return (
     <div className="min-h-dvh bg-neutral-50">
       {/* Header */}
       <header className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex max-w-4xl items-center gap-3 px-5 py-5 sm:px-8 sm:py-6">
-          <img
-            src="/icons/icon-512.png"
-            alt="Eko Riders"
-            className="h-10 w-10 rounded-xl shadow-sm object-cover"
-          />
-          <div>
-            <h1 className="font-heading text-xl font-black tracking-tight text-ink">
-              Eko Riders
-            </h1>
-            <p className="text-xs font-medium text-neutral-400">
-              Last-mile delivery for Nigerian businesses
-            </p>
+        <div className="mx-auto flex max-w-4xl items-center justify-between px-5 py-5 sm:px-8 sm:py-6">
+          <div className="flex items-center gap-3">
+            <img
+              src="/icons/icon-512.png"
+              alt="Eko Riders"
+              className="h-10 w-10 rounded-xl shadow-sm object-cover"
+            />
+            <div>
+              <h1 className="font-heading text-xl font-black tracking-tight text-ink">
+                Eko Riders
+              </h1>
+              <p className="text-xs font-medium text-neutral-400">
+                Last-mile delivery for Nigerian businesses
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {user ? (
+              <div className="flex items-center gap-2.5">
+                <div className="text-right hidden sm:block">
+                  <p className="text-xs font-bold text-ink">
+                    {profile?.full_name ?? user.email}
+                  </p>
+                  <p className="text-[10px] uppercase font-semibold text-brand tracking-wider">
+                    {profile?.role ?? 'User'}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => signOut()}
+                  className="flex min-h-touch items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 shadow-2xs transition-colors hover:border-status-danger-border hover:bg-status-danger-bg hover:text-status-danger"
+                  title="Sign out"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Sign out</span>
+                </button>
+              </div>
+            ) : (
+              <a
+                href="/login"
+                className="flex min-h-touch items-center gap-1.5 rounded-xl border border-neutral-300 bg-white px-3.5 text-xs font-bold text-ink shadow-2xs transition-colors hover:border-brand hover:bg-neutral-50"
+              >
+                Sign in
+              </a>
+            )}
           </div>
         </div>
       </header>

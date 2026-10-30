@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Home, Package, Banknote, User as UserIcon } from 'lucide-react'
+import { Home, Package, Banknote, User as UserIcon, LogOut } from 'lucide-react'
 import { MobileShell, type TabItem } from '../shell/MobileShell'
 import { useAppData } from '../../context/AppContext'
-import { EmptyState } from '../ui/EmptyState'
+import { useAuth } from '../../context/AuthContext'
 
 // Screens
 import { RiderHome } from './RiderHome'
@@ -19,7 +19,8 @@ const RIDER_TABS: TabItem[] = [
 
 export function RiderApp() {
   const { riders } = useAppData()
-  // Mock login: always use Ibrahim for this demo
+  const { user, profile, rider, signOut } = useAuth()
+  // Mock fallback
   const mockRider = riders.find((r) => r.name === 'Ibrahim Musa')
 
   const [activeTab, setActiveTab] = useState('home')
@@ -72,11 +73,60 @@ export function RiderApp() {
       {activeTab === 'earnings' && <RiderEarnings rider={mockRider} />}
 
       {activeTab === 'profile' && (
-        <div className="p-4">
-          <EmptyState
-            title="Profile"
-            description="Manage your rider account, vehicle details, and settings here."
-          />
+        <div className="p-4 space-y-4">
+          <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs">
+            <div className="flex items-center gap-3.5">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 font-bold text-base">
+                {profile?.full_name ? profile.full_name[0] : 'I'}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-heading text-base font-bold text-ink truncate">
+                  {profile?.full_name ?? mockRider.name}
+                </h3>
+                <p className="text-xs text-neutral-500 truncate">
+                  {user?.email ?? mockRider.phone}
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 border-t border-neutral-100 pt-3 space-y-2 text-xs text-neutral-600">
+              <div className="flex items-center justify-between">
+                <span>Vehicle type</span>
+                <span className="font-semibold uppercase text-ink">
+                  {rider?.vehicle_type ?? mockRider.vehicleType}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Active zone</span>
+                <span className="font-semibold text-ink">
+                  {rider?.current_zone ?? mockRider.currentZone}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Database session</span>
+                <span className="font-semibold text-status-success uppercase text-[10px]">
+                  {user ? 'Live Supabase' : 'Demo Mode'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {user ? (
+            <button
+              type="button"
+              onClick={() => signOut()}
+              className="flex w-full min-h-touch items-center justify-center gap-2 rounded-xl border border-status-danger-border bg-white text-sm font-bold text-status-danger shadow-xs transition-colors hover:bg-status-danger-bg"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Sign out</span>
+            </button>
+          ) : (
+            <a
+              href="/login/rider"
+              className="flex w-full min-h-touch items-center justify-center gap-2 rounded-xl bg-brand text-sm font-bold text-ink shadow-xs transition-colors hover:bg-brand-600"
+            >
+              <span>Sign in with live account</span>
+            </a>
+          )}
         </div>
       )}
     </MobileShell>

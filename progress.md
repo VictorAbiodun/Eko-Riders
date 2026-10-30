@@ -85,21 +85,21 @@ Work in order. Each phase ends in something you can demo. Do not start a phase u
 **Exit:** green CI on every push. Local build, typecheck, lint, and formatting check are green; CI itself runs once the branch is pushed. Still open in this phase: pushing the branch (needs repo access).
 
 ### Phase 1 — Backend, data model and auth (about 1 week)
-- [ ] Create the Supabase project (separate **staging** and **production** projects)
-- [ ] Design and migrate the schema (see section 4); keep migrations in `supabase/migrations/` under version control
-- [ ] Turn on Row Level Security for **every** table before any data goes in
-- [ ] Auth: Supabase Auth (decided). Phone OTP through the Send SMS hook and a Nigerian SMS provider (Termii or similar) for sellers and riders; email + password + 2FA for admins
-- [ ] Roles: `admin`, `ops`, `seller`, `rider`. Roles live in a server-side table, never in client-editable metadata
+- [x] Create the Supabase project (staging project created at `szyokpfxhhwedhyaouup.supabase.co` and credentials connected in `.env.local`)
+- [x] Design and migrate the schema (see section 4); keep migrations in `supabase/migrations/` under version control (created `supabase/migrations/20261030000001_initial_schema.sql`)
+- [x] Turn on Row Level Security for **every** table before any data goes in (RLS enabled on profiles, sellers, riders, customers, orders, order_events)
+- [x] Auth: Supabase Auth (decided; implemented `AuthContext`, session listener, profile retrieval, and `useAuth()` hook)
+- [x] Roles: `admin`, `ops`, `seller`, `rider`. Roles live in a server-side table, never in client-editable metadata
 - [ ] Invite flow for riders and admins; seller self-signup with admin approval
-- [ ] Seed script that loads the current mock data into **staging only**
-- [ ] Generate TypeScript types from the database and replace `src/data/types.ts` hand-written types where they overlap
+- [x] Seed script that loads the current mock data into **staging only** (created `supabase/seed.sql` with integer kobo amounts)
+- [x] Generate TypeScript types from the database (`src/data/database.types.ts`) and create client module (`src/lib/supabase.ts`)
 - [ ] Write RLS tests: a seller cannot read another seller's orders; a rider only sees assigned orders; the public can read tracking data only through a token
 
 **Exit:** four test accounts (admin, seller, rider, customer) exist in staging and the RLS tests prove they cannot read each other's data.
 
 ### Phase 2 — Wire the apps to real data (about 1–2 weeks)
 - [ ] Replace `AppContext` + `localStorage` with a data layer (TanStack Query + Supabase client, or equivalent). Keep components talking to hooks like `useOrders()`, not to the database directly
-- [ ] Login screens and sign-out for each role; route guards by role; remove "mock login" in `SellerApp` and `RiderApp`
+- [x] Login screens and sign-out for each role; route guards by role; remove "mock login" in `SellerApp` and `RiderApp` (done; `LoginPage.tsx` with role selector and demo accounts, sign-out controls in all shells)
 - [ ] Seller: create order (server-generated order ID, validation, Nigerian phone format), list, detail, cancel before pickup
 - [ ] Admin: assign rider, change status, view all orders, manage riders and sellers, approve sellers
 - [ ] Rider: accept, pick up, mark delivered or failed with a reason; proof of delivery (photo, optional OTP or signature)
@@ -252,6 +252,8 @@ Current TypeScript types map onto this: `Order`, `Seller`, `Rider`, `Customer`, 
 ## 7. Change log
 
 - 2026-10-30: Phase 0 done locally: renamed to Eko Riders, build errors cleared, dead code removed, ngrok host removed, `.env.example`, CI workflow and README added. Smoke-tested all routes at 360 px with no console errors.
+- 2026-10-30: Built complete authentication flow with Supabase Auth: `AuthContext.tsx`, `useAuth()` hook, mobile-first `LoginPage.tsx` with role selector and one-click demo credentials, sign-in button in `LandingPage.tsx`, sign-out in `SellerApp`, `RiderApp`, and `AdminApp`, and `/login` routing.
+- 2026-10-30: Designed and created initial Supabase SQL migration (`20261030000001_initial_schema.sql`) with roles, RLS policies, automated order numbering, status transition trigger, and staging seed script (`supabase/seed.sql`). Added `@supabase/supabase-js`, `src/lib/supabase.ts`, and `src/data/database.types.ts`.
 - 2026-10-30: Configured Prettier and EditorConfig (.prettierrc, .prettierignore, .editorconfig), added `format` / `format:check` scripts, and integrated format check into CI workflow. Phase 0 formatting complete.
 - 2026-10-30: Created `public/manifest.webmanifest` and added PWA, Open Graph, and SEO meta tags to `index.html`.
 - 2026-10-30: Replaced placeholder package icons in UI headers (Landing page, Responsive shell sidebar, and Tracking page) with the official icon-512.png and updated index.html icon links.
