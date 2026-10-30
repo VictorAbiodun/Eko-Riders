@@ -1,4 +1,4 @@
-import { AlertTriangle, RotateCcw, Package } from 'lucide-react'
+import { AlertTriangle, RotateCcw } from 'lucide-react'
 import { useAppData } from '../../context/AppContext'
 import type { OrderStatus } from '../../data/types'
 import { MapGraphic } from '../ui/MapGraphic'
@@ -30,9 +30,10 @@ const RIDER_VISIBLE_STATUSES: OrderStatus[] = [
   'OUT_FOR_DELIVERY',
 ]
 
-function getEstimatedArrival(
-  createdAt: string,
-): { start: string; end: string } {
+function getEstimatedArrival(createdAt: string): {
+  start: string
+  end: string
+} {
   const base = new Date(createdAt)
   // Out-for-delivery happens at +71 min (matches stepper offsets)
   const outTime = base.getTime() + 71 * 60_000
@@ -53,15 +54,20 @@ function getEstimatedArrival(
 
 function TrackingHeader() {
   return (
-    <header className="bg-white px-5 py-4" style={{
-      boxShadow: '0 1px 8px -2px rgba(30, 28, 26, 0.06)',
-    }}>
+    <header
+      className="bg-white px-5 py-4"
+      style={{
+        boxShadow: '0 1px 8px -2px rgba(30, 28, 26, 0.06)',
+      }}
+    >
       <div className="flex items-center gap-2">
-        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-brand">
-          <Package className="h-4 w-4 text-white" strokeWidth={2.5} />
-        </div>
+        <img
+          src="/icons/icon-512.png"
+          alt="Eko Riders"
+          className="h-7 w-7 rounded-md object-cover"
+        />
         <span className="font-heading text-base font-bold tracking-tight text-ink">
-          ShipFast
+          Eko Riders
         </span>
       </div>
     </header>
@@ -130,7 +136,7 @@ function TrackingFooter() {
     <footer className="border-t border-neutral-100 px-5 py-6 text-center">
       <p className="text-xs text-neutral-400">
         Powered by{' '}
-        <span className="font-semibold text-neutral-500">ShipFast</span>
+        <span className="font-semibold text-neutral-500">Eko Riders</span>
       </p>
       <p className="mt-0.5 text-xs text-neutral-400">
         Last-mile delivery for Nigerian businesses
@@ -177,14 +183,11 @@ export function TrackingPage({ orderId }: TrackingPageProps) {
   const { orders, riders } = useAppData()
   const order = orders.find((o) => o.id === orderId)
 
-  const isTerminal = order
-    ? TERMINAL_STATUSES.includes(order.status)
-    : false
+  const isTerminal = order ? TERMINAL_STATUSES.includes(order.status) : false
 
-  const rider =
-    order?.riderName
-      ? riders.find((r) => r.name === order.riderName) ?? null
-      : null
+  const rider = order?.riderName
+    ? (riders.find((r) => r.name === order.riderName) ?? null)
+    : null
 
   const showRider =
     rider && order && RIDER_VISIBLE_STATUSES.includes(order.status)
@@ -237,10 +240,7 @@ export function TrackingPage({ orderId }: TrackingPageProps) {
             {/* ── Rider card ── */}
             {showRider && rider && (
               <div className="mt-2 mb-5">
-                <RiderCard
-                  rider={rider}
-                  estimatedArrival={estimatedArrival}
-                />
+                <RiderCard rider={rider} estimatedArrival={estimatedArrival} />
               </div>
             )}
 

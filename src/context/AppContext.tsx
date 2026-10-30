@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react'
 import { mockOrders, mockRiders, mockSellers } from '../data/mockData'
 import type { Order, Rider, Seller } from '../data/types'
 
@@ -11,7 +18,7 @@ interface AppContextValue {
 
 const AppContext = createContext<AppContextValue | null>(null)
 
-const STORAGE_KEY = 'shipfast_demo_orders'
+const STORAGE_KEY = 'eko_riders_demo_orders'
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<Order[]>(() => {

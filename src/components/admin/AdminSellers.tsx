@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { Store, MapPin, Package } from 'lucide-react'
+import { MapPin, Package } from 'lucide-react'
 import { useAppData } from '../../context/AppContext'
-import type { Seller } from '../../data/types'
 
 const PLAN_COLORS: Record<string, string> = {
   starter: 'bg-neutral-500 text-white',
@@ -25,14 +24,19 @@ export function AdminSellers() {
   const { sellers, orders } = useAppData()
   const [selectedSeller, setSelectedSeller] = useState<string | null>(null)
 
-  const selected = selectedSeller ? sellers.find((s) => s.id === selectedSeller) : null
+  const selected = selectedSeller
+    ? sellers.find((s) => s.id === selectedSeller)
+    : null
 
   if (selected) {
     const plan = getPlan(selected.totalOrders)
     const limit = getPlanLimit(plan)
     const sellerOrders = orders
       .filter((o) => o.sellerName === selected.businessName)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )
 
     return (
       <div className="p-5 md:p-8">
@@ -51,7 +55,9 @@ export function AdminSellers() {
                 {selected.businessName[0]}
               </div>
               <div>
-                <h2 className="text-lg font-bold text-ink">{selected.businessName}</h2>
+                <h2 className="text-lg font-bold text-ink">
+                  {selected.businessName}
+                </h2>
                 <p className="text-sm text-neutral-500">{selected.name}</p>
               </div>
             </div>
@@ -65,7 +71,9 @@ export function AdminSellers() {
                 {selected.totalOrders} lifetime orders
               </div>
               <div className="flex items-center gap-2">
-                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold capitalize ${PLAN_COLORS[plan]}`}>
+                <span
+                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold capitalize ${PLAN_COLORS[plan]}`}
+                >
                   {plan} Plan
                 </span>
               </div>
@@ -78,18 +86,26 @@ export function AdminSellers() {
               <div>
                 <div className="flex items-center justify-between text-sm mb-1">
                   <span className="text-neutral-500">Deliveries used</span>
-                  <span className="font-data font-bold text-ink">{selected.totalOrders} / {limit}</span>
+                  <span className="font-data font-bold text-ink">
+                    {selected.totalOrders} / {limit}
+                  </span>
                 </div>
                 <div className="h-2 rounded-full bg-neutral-100 overflow-hidden">
                   <div
                     className="h-full rounded-full bg-brand transition-all"
-                    style={{ width: `${Math.min((selected.totalOrders / limit) * 100, 100)}%` }}
+                    style={{
+                      width: `${Math.min((selected.totalOrders / limit) * 100, 100)}%`,
+                    }}
                   />
                 </div>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-2">Recent Orders</p>
-                <p className="font-data text-2xl font-bold text-ink">{sellerOrders.length}</p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-2">
+                  Recent Orders
+                </p>
+                <p className="font-data text-2xl font-bold text-ink">
+                  {sellerOrders.length}
+                </p>
                 <p className="text-xs text-neutral-500">in this demo dataset</p>
               </div>
             </div>
@@ -102,8 +118,12 @@ export function AdminSellers() {
   return (
     <div className="flex flex-col h-full">
       <div className="border-b border-neutral-200 bg-white px-5 py-5 md:px-8">
-        <h1 className="font-heading text-2xl font-bold tracking-tight text-ink">Sellers</h1>
-        <p className="mt-1 text-sm text-neutral-500">{sellers.length} registered sellers</p>
+        <h1 className="font-heading text-2xl font-bold tracking-tight text-ink">
+          Sellers
+        </h1>
+        <p className="mt-1 text-sm text-neutral-500">
+          {sellers.length} registered sellers
+        </p>
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -112,11 +132,21 @@ export function AdminSellers() {
           <table className="w-full text-sm">
             <thead className="bg-neutral-50">
               <tr className="border-b border-neutral-200 text-left">
-                <th className="px-8 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-400">Business</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-400">Plan</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-400">Area</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-400">Usage</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-400 text-right pr-8">Total Orders</th>
+                <th className="px-8 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                  Business
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                  Plan
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                  Area
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                  Usage
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-400 text-right pr-8">
+                  Total Orders
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100 bg-white">
@@ -137,17 +167,25 @@ export function AdminSellers() {
                           {seller.businessName[0]}
                         </div>
                         <div>
-                          <p className="font-semibold text-ink">{seller.businessName}</p>
-                          <p className="text-xs text-neutral-500">{seller.name}</p>
+                          <p className="font-semibold text-ink">
+                            {seller.businessName}
+                          </p>
+                          <p className="text-xs text-neutral-500">
+                            {seller.name}
+                          </p>
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-3.5">
-                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold capitalize ${PLAN_COLORS[plan]}`}>
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold capitalize ${PLAN_COLORS[plan]}`}
+                      >
                         {plan}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-neutral-700">{seller.area}</td>
+                    <td className="px-4 py-3.5 text-neutral-700">
+                      {seller.area}
+                    </td>
                     <td className="px-4 py-3.5">
                       <div className="w-24">
                         <div className="h-1.5 rounded-full bg-neutral-100 overflow-hidden">
@@ -156,10 +194,14 @@ export function AdminSellers() {
                             style={{ width: `${pct}%` }}
                           />
                         </div>
-                        <p className="mt-0.5 text-[10px] text-neutral-400">{seller.totalOrders}/{limit}</p>
+                        <p className="mt-0.5 text-[10px] text-neutral-400">
+                          {seller.totalOrders}/{limit}
+                        </p>
                       </div>
                     </td>
-                    <td className="px-4 py-3.5 text-right font-data font-bold text-ink pr-8">{seller.totalOrders}</td>
+                    <td className="px-4 py-3.5 text-right font-data font-bold text-ink pr-8">
+                      {seller.totalOrders}
+                    </td>
                   </tr>
                 )
               })}
@@ -183,12 +225,18 @@ export function AdminSellers() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="font-semibold text-ink truncate">{seller.businessName}</span>
-                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold capitalize ${PLAN_COLORS[plan]}`}>
+                    <span className="font-semibold text-ink truncate">
+                      {seller.businessName}
+                    </span>
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold capitalize ${PLAN_COLORS[plan]}`}
+                    >
                       {plan}
                     </span>
                   </div>
-                  <p className="mt-0.5 text-xs text-neutral-500">{seller.area} · {seller.totalOrders} orders</p>
+                  <p className="mt-0.5 text-xs text-neutral-500">
+                    {seller.area} · {seller.totalOrders} orders
+                  </p>
                 </div>
               </button>
             )

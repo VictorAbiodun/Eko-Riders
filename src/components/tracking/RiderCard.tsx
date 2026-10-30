@@ -34,9 +34,7 @@ export function RiderCard({ rider, estimatedArrival }: RiderCardProps) {
 
         {/* Name + vehicle type */}
         <div className="min-w-0 flex-1">
-          <p className="truncate text-base font-bold text-ink">
-            {rider.name}
-          </p>
+          <p className="truncate text-base font-bold text-ink">{rider.name}</p>
           <div className="flex items-center gap-1.5 text-xs text-neutral-500">
             <User className="h-3 w-3" strokeWidth={2} />
             <span className="capitalize">{rider.vehicleType} rider</span>

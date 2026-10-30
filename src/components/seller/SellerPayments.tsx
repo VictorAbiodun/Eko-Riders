@@ -10,12 +10,20 @@ interface SellerPaymentsProps {
 export function SellerPayments({ seller }: SellerPaymentsProps) {
   const { orders } = useAppData()
 
-  const sellerOrders = orders.filter((o) => o.sellerName === seller.businessName)
+  const sellerOrders = orders.filter(
+    (o) => o.sellerName === seller.businessName,
+  )
 
   const pendingSettlement = sellerOrders
-    .filter((o) => o.codAmount > 0 && o.status !== 'DELIVERED' && o.status !== 'FAILED' && o.status !== 'RETURNED')
+    .filter(
+      (o) =>
+        o.codAmount > 0 &&
+        o.status !== 'DELIVERED' &&
+        o.status !== 'FAILED' &&
+        o.status !== 'RETURNED',
+    )
     .reduce((sum, o) => sum + o.codAmount, 0)
-    
+
   const codCollected = sellerOrders
     .filter((o) => o.codAmount > 0 && o.status === 'DELIVERED')
     .reduce((sum, o) => sum + o.codAmount, 0)
@@ -65,7 +73,9 @@ export function SellerPayments({ seller }: SellerPaymentsProps) {
           <p className="mt-2 font-data text-2xl font-bold text-ink">
             {formatNaira(pendingSettlement)}
           </p>
-          <p className="mt-1 text-xs text-neutral-400">From active deliveries</p>
+          <p className="mt-1 text-xs text-neutral-400">
+            From active deliveries
+          </p>
         </div>
 
         <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
@@ -94,7 +104,10 @@ export function SellerPayments({ seller }: SellerPaymentsProps) {
         ) : (
           <ul className="divide-y divide-neutral-100">
             {transactions.map((tx) => (
-              <li key={tx.id} className="flex items-center justify-between px-5 py-4">
+              <li
+                key={tx.id}
+                className="flex items-center justify-between px-5 py-4"
+              >
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-status-success-bg">
                     <ArrowDownToLine className="h-5 w-5 text-status-success" />

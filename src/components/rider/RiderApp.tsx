@@ -23,7 +23,7 @@ export function RiderApp() {
   const mockRider = riders.find((r) => r.name === 'Ibrahim Musa')
 
   const [activeTab, setActiveTab] = useState('home')
-  
+
   // Drill-down state for Delivery Details
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
 
@@ -61,16 +61,16 @@ export function RiderApp() {
           onNavigateToEarnings={() => setActiveTab('earnings')}
         />
       )}
-      
+
       {activeTab === 'deliveries' && (
         <RiderDeliveriesList
           rider={mockRider}
           onSelectOrder={setSelectedOrderId}
         />
       )}
-      
+
       {activeTab === 'earnings' && <RiderEarnings rider={mockRider} />}
-      
+
       {activeTab === 'profile' && (
         <div className="p-4">
           <EmptyState

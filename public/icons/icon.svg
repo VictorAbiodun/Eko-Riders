@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Eko Riders">
+  <rect width="512" height="512" rx="112" fill="#F0B01C"/>
+  <g fill="#1E1C1A">
+    <rect x="150" y="150" width="228" height="54" rx="27"/>
+    <rect x="150" y="229" width="172" height="54" rx="27"/>
+    <rect x="150" y="308" width="228" height="54" rx="27"/>
+    <rect x="150" y="150" width="54" height="212" rx="27"/>
+  </g>
+  <circle cx="372" cy="256" r="40" fill="#FCFAEE" stroke="#1E1C1A" stroke-width="16"/>
+  <circle cx="372" cy="256" r="11" fill="#1E1C1A"/>
+</svg>

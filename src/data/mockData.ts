@@ -157,7 +157,7 @@ export const mockOrders: Order[] = [
     customerName: 'David Ogunleye',
     customerAddress: '22 Bode Thomas Street, Surulere, Lagos',
     riderName: 'Grace Etim',
-    productDescription: 'Men\'s agbada (Custom fit)',
+    productDescription: "Men's agbada (Custom fit)",
     codAmount: 45000,
     deliveryFee: 1800,
     createdAt: '2026-08-25T11:05:00+01:00',

@@ -6,7 +6,6 @@ import {
   Package,
   Phone,
   MessageCircle,
-  User,
   ChevronRight,
 } from 'lucide-react'
 import { useAppData } from '../../context/AppContext'
@@ -99,8 +98,12 @@ export function RiderDeliveryDetail({
 
   // Pickup area (simplified for demo)
   const pickupArea = 'Lekki Phase 1, Lagos'
-  const dropoffMatch = order.customerAddress.match(/([^,]+,\s*[^,]+),\s*Lagos$/i)
-  const dropoffArea = dropoffMatch ? `${dropoffMatch[1]}, Lagos` : order.customerAddress
+  const dropoffMatch = order.customerAddress.match(
+    /([^,]+,\s*[^,]+),\s*Lagos$/i,
+  )
+  const dropoffArea = dropoffMatch
+    ? `${dropoffMatch[1]}, Lagos`
+    : order.customerAddress
 
   // Estimated date
   const estimatedDate = new Date(
@@ -195,9 +198,12 @@ export function RiderDeliveryDetail({
   return (
     <div className="flex h-dvh flex-col bg-neutral-50">
       {/* Header */}
-      <header className="flex items-center bg-white px-2 py-2" style={{
-        boxShadow: '0 1px 8px -2px rgba(30, 28, 26, 0.06)',
-      }}>
+      <header
+        className="flex items-center bg-white px-2 py-2"
+        style={{
+          boxShadow: '0 1px 8px -2px rgba(30, 28, 26, 0.06)',
+        }}
+      >
         <button
           type="button"
           onClick={onBack}
@@ -318,7 +324,10 @@ export function RiderDeliveryDetail({
               Package
             </p>
             <div className="mt-2 flex items-start gap-2">
-              <Package className="mt-0.5 h-4 w-4 shrink-0 text-neutral-400" strokeWidth={1.75} />
+              <Package
+                className="mt-0.5 h-4 w-4 shrink-0 text-neutral-400"
+                strokeWidth={1.75}
+              />
               <p className="text-sm font-medium text-ink">
                 {order.productDescription}
               </p>
@@ -347,7 +356,10 @@ export function RiderDeliveryDetail({
                 </div>
                 <span className="text-base font-bold">Live Tracking</span>
               </div>
-              <ChevronRight className="h-5 w-5 text-white/70" strokeWidth={2.5} />
+              <ChevronRight
+                className="h-5 w-5 text-white/70"
+                strokeWidth={2.5}
+              />
             </button>
           </div>
         )}
@@ -355,9 +367,12 @@ export function RiderDeliveryDetail({
 
       {/* Footer Action */}
       {isActive && (
-        <div className="bg-white p-5 pb-6" style={{
-          boxShadow: '0 -4px 20px -4px rgba(30, 28, 26, 0.06)',
-        }}>
+        <div
+          className="bg-white p-5 pb-6"
+          style={{
+            boxShadow: '0 -4px 20px -4px rgba(30, 28, 26, 0.06)',
+          }}
+        >
           <button
             type="button"
             onClick={handleAction}

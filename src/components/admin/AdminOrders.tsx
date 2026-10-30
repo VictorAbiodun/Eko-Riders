@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ArrowLeft, Package, MapPin } from 'lucide-react'
 import { useAppData } from '../../context/AppContext'
 import { formatNaira } from '../../data/mockData'
-import type { Order, OrderStatus } from '../../data/types'
+import type { Order } from '../../data/types'
 import { StatusBadge } from '../ui/StatusBadge'
 import { EmptyState } from '../ui/EmptyState'
 import { SellerOrderDetail } from '../seller/SellerOrderDetail'
@@ -13,7 +13,8 @@ interface AdminOrdersProps {
   onBack: () => void
 }
 
-type FilterTab = 'ALL' | 'PENDING' | 'IN_TRANSIT' | 'DELIVERED' | 'FAILED' | 'RETURNED'
+type FilterTab =
+  'ALL' | 'PENDING' | 'IN_TRANSIT' | 'DELIVERED' | 'FAILED' | 'RETURNED'
 
 const FILTER_TABS: { id: FilterTab; label: string }[] = [
   { id: 'ALL', label: 'All' },
@@ -76,7 +77,7 @@ export function AdminOrders({
           </h2>
         </div>
         <div className="flex-1 overflow-y-auto">
-          <SellerOrderDetail orderId={selectedOrderId} />
+          <SellerOrderDetail orderId={selectedOrderId} canDispatch />
         </div>
       </div>
     )
@@ -160,9 +161,8 @@ export function AdminOrders({
                 </thead>
                 <tbody className="divide-y divide-neutral-100 bg-white">
                   {filteredOrders.map((order) => {
-                    const dropoffMatch = order.customerAddress.match(
-                      /([^,]+),\s*Lagos$/i,
-                    )
+                    const dropoffMatch =
+                      order.customerAddress.match(/([^,]+),\s*Lagos$/i)
                     const dropoffArea = dropoffMatch
                       ? dropoffMatch[1].trim()
                       : 'Lagos'
@@ -216,9 +216,8 @@ export function AdminOrders({
             {/* Mobile card list */}
             <div className="md:hidden divide-y divide-neutral-100 bg-white">
               {filteredOrders.map((order) => {
-                const dropoffMatch = order.customerAddress.match(
-                  /([^,]+),\s*Lagos$/i,
-                )
+                const dropoffMatch =
+                  order.customerAddress.match(/([^,]+),\s*Lagos$/i)
                 const dropoffArea = dropoffMatch
                   ? dropoffMatch[1].trim()
                   : 'Lagos'

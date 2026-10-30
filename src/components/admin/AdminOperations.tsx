@@ -34,13 +34,36 @@ function StatCard({
   accent?: 'brand' | 'success' | 'info' | 'danger' | 'warning' | 'accent'
   onClick?: () => void
 }) {
-  const accentClasses: Record<string, { bg: string; icon: string; ring: string }> = {
+  const accentClasses: Record<
+    string,
+    { bg: string; icon: string; ring: string }
+  > = {
     brand: { bg: 'bg-brand-50', icon: 'text-brand-600', ring: 'ring-brand/10' },
-    success: { bg: 'bg-status-success-bg', icon: 'text-status-success', ring: 'ring-status-success/10' },
-    info: { bg: 'bg-status-info-bg', icon: 'text-status-info', ring: 'ring-status-info/10' },
-    danger: { bg: 'bg-status-danger-bg', icon: 'text-status-danger', ring: 'ring-status-danger/10' },
-    warning: { bg: 'bg-status-warning-bg', icon: 'text-status-warning', ring: 'ring-status-warning/10' },
-    accent: { bg: 'bg-accent-50', icon: 'text-accent-600', ring: 'ring-accent/10' },
+    success: {
+      bg: 'bg-status-success-bg',
+      icon: 'text-status-success',
+      ring: 'ring-status-success/10',
+    },
+    info: {
+      bg: 'bg-status-info-bg',
+      icon: 'text-status-info',
+      ring: 'ring-status-info/10',
+    },
+    danger: {
+      bg: 'bg-status-danger-bg',
+      icon: 'text-status-danger',
+      ring: 'ring-status-danger/10',
+    },
+    warning: {
+      bg: 'bg-status-warning-bg',
+      icon: 'text-status-warning',
+      ring: 'ring-status-warning/10',
+    },
+    accent: {
+      bg: 'bg-accent-50',
+      icon: 'text-accent-600',
+      ring: 'ring-accent/10',
+    },
   }
   const a = accentClasses[accent ?? 'brand']
 
@@ -51,10 +74,14 @@ function StatCard({
       type={onClick ? 'button' : undefined}
       onClick={onClick}
       className={`flex items-start gap-4 rounded-xl border border-neutral-200 bg-white p-4 shadow-sm ring-1 ${a.ring} ${
-        onClick ? 'cursor-pointer transition-colors hover:bg-neutral-50 active:bg-neutral-100 text-left' : ''
+        onClick
+          ? 'cursor-pointer transition-colors hover:bg-neutral-50 active:bg-neutral-100 text-left'
+          : ''
       }`}
     >
-      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${a.bg}`}>
+      <div
+        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${a.bg}`}
+      >
         <Icon className={`h-5 w-5 ${a.icon}`} strokeWidth={1.75} />
       </div>
       <div>
@@ -122,8 +149,11 @@ function OrdersTable({
           </thead>
           <tbody className="divide-y divide-neutral-100">
             {orders.map((order) => {
-              const dropoffMatch = order.customerAddress.match(/([^,]+),\s*Lagos$/i)
-              const dropoffArea = dropoffMatch ? dropoffMatch[1].trim() : 'Lagos'
+              const dropoffMatch =
+                order.customerAddress.match(/([^,]+),\s*Lagos$/i)
+              const dropoffArea = dropoffMatch
+                ? dropoffMatch[1].trim()
+                : 'Lagos'
 
               return (
                 <tr
@@ -138,12 +168,18 @@ function OrdersTable({
                     {order.sellerName}
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-neutral-700">{order.customerName}</span>
-                    <span className="ml-1 text-neutral-400">→ {dropoffArea}</span>
+                    <span className="text-neutral-700">
+                      {order.customerName}
+                    </span>
+                    <span className="ml-1 text-neutral-400">
+                      → {dropoffArea}
+                    </span>
                   </td>
                   <td className="px-4 py-3 text-neutral-700">
                     {order.riderName ?? (
-                      <span className="italic text-neutral-400">Unassigned</span>
+                      <span className="italic text-neutral-400">
+                        Unassigned
+                      </span>
                     )}
                   </td>
                   <td className="px-4 py-3">
@@ -173,11 +209,15 @@ function OrdersTable({
               className="flex w-full flex-col gap-2 px-4 py-3.5 text-left transition-colors active:bg-neutral-50"
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="font-data text-sm font-bold text-ink">{order.id}</span>
+                <span className="font-data text-sm font-bold text-ink">
+                  {order.id}
+                </span>
                 <StatusBadge status={order.status} />
               </div>
               <div className="flex items-center justify-between text-xs text-neutral-500">
-                <span>{order.customerName} → {dropoffArea}</span>
+                <span>
+                  {order.customerName} → {dropoffArea}
+                </span>
                 <span>{timeAgo(order.createdAt)}</span>
               </div>
               <div className="text-xs text-neutral-400">
@@ -194,7 +234,10 @@ function OrdersTable({
 
 /* ─── Main Operations Screen ─── */
 
-export function AdminOperations({ onNavigate, onSelectOrder }: AdminOperationsProps) {
+export function AdminOperations({
+  onNavigate,
+  onSelectOrder,
+}: AdminOperationsProps) {
   const { orders, riders } = useAppData()
 
   // Stats
@@ -209,19 +252,25 @@ export function AdminOperations({ onNavigate, onSelectOrder }: AdminOperationsPr
   const failed = orders.filter((o) => o.status === 'FAILED').length
   const returned = orders.filter((o) => o.status === 'RETURNED').length
   const activeRiders = riders.filter((r) => r.status !== 'offline').length
-  const availableRiders = riders.filter((r) => r.status === 'available').length
 
   // COD totals
   const codCollected = orders
     .filter((o) => o.status === 'DELIVERED' && o.codAmount > 0)
     .reduce((sum, o) => sum + o.codAmount, 0)
   const codPending = orders
-    .filter((o) => !['DELIVERED', 'FAILED', 'RETURNED'].includes(o.status) && o.codAmount > 0)
+    .filter(
+      (o) =>
+        !['DELIVERED', 'FAILED', 'RETURNED'].includes(o.status) &&
+        o.codAmount > 0,
+    )
     .reduce((sum, o) => sum + o.codAmount, 0)
 
   // Recent orders for table (sorted by recency)
   const recentOrders = [...orders]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )
     .slice(0, 10)
 
   return (
@@ -283,7 +332,10 @@ export function AdminOperations({ onNavigate, onSelectOrder }: AdminOperationsPr
       <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2">
         <div className="flex items-center gap-4 rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-status-success-bg">
-            <Banknote className="h-6 w-6 text-status-success" strokeWidth={1.75} />
+            <Banknote
+              className="h-6 w-6 text-status-success"
+              strokeWidth={1.75}
+            />
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
@@ -325,10 +377,13 @@ export function AdminOperations({ onNavigate, onSelectOrder }: AdminOperationsPr
           </button>
         </div>
         <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
-          <OrdersTable orders={recentOrders} onSelectOrder={(id) => {
-            onSelectOrder(id)
-            onNavigate('orders')
-          }} />
+          <OrdersTable
+            orders={recentOrders}
+            onSelectOrder={(id) => {
+              onSelectOrder(id)
+              onNavigate('orders')
+            }}
+          />
         </div>
       </div>
     </div>

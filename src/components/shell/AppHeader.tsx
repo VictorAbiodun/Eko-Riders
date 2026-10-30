@@ -12,7 +12,12 @@ interface AppHeaderProps {
   }
 }
 
-export function AppHeader({ title, showBack, onBack, rightAction }: AppHeaderProps) {
+export function AppHeader({
+  title,
+  showBack,
+  onBack,
+  rightAction,
+}: AppHeaderProps) {
   const RightIcon = rightAction?.icon
 
   return (

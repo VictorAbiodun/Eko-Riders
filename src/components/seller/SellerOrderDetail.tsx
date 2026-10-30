@@ -12,7 +12,10 @@ interface SellerOrderDetailProps {
   canDispatch?: boolean
 }
 
-export function SellerOrderDetail({ orderId, canDispatch }: SellerOrderDetailProps) {
+export function SellerOrderDetail({
+  orderId,
+  canDispatch,
+}: SellerOrderDetailProps) {
   const { orders, riders, setOrders } = useAppData()
   const order = orders.find((o) => o.id === orderId)
   const [riderId, setRiderId] = useState('')
@@ -83,12 +86,16 @@ export function SellerOrderDetail({ orderId, canDispatch }: SellerOrderDetailPro
             <div className="space-y-4 text-sm">
               <div>
                 <p className="text-neutral-500">Description</p>
-                <p className="font-semibold text-ink">{order.productDescription}</p>
+                <p className="font-semibold text-ink">
+                  {order.productDescription}
+                </p>
               </div>
               <div className="flex items-center justify-between border-t border-neutral-100 pt-3">
                 <p className="text-neutral-500">Payment Method</p>
                 {order.codAmount > 0 ? (
-                  <span className="font-bold text-status-warning">Pay on Delivery</span>
+                  <span className="font-bold text-status-warning">
+                    Pay on Delivery
+                  </span>
                 ) : (
                   <span className="font-bold text-brand-700">Prepaid</span>
                 )}
@@ -130,7 +137,8 @@ export function SellerOrderDetail({ orderId, canDispatch }: SellerOrderDetailPro
                     .filter((r) => r.status !== 'offline')
                     .map((r) => (
                       <option key={r.id} value={r.id}>
-                        {r.name} · {r.currentZone} ({r.status === 'available' ? 'Available' : 'Busy'})
+                        {r.name} · {r.currentZone} (
+                        {r.status === 'available' ? 'Available' : 'Busy'})
                       </option>
                     ))}
                 </select>
@@ -144,7 +152,9 @@ export function SellerOrderDetail({ orderId, canDispatch }: SellerOrderDetailPro
                 </button>
               </div>
             ) : (
-              <p className="text-sm text-neutral-500 italic">No rider assigned yet</p>
+              <p className="text-sm text-neutral-500 italic">
+                No rider assigned yet
+              </p>
             )}
           </div>
         </div>

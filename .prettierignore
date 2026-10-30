@@ -1,0 +1,8 @@
+dist
+node_modules
+.git
+package-lock.json
+*.png
+*.svg
+*.webmanifest
+*.md

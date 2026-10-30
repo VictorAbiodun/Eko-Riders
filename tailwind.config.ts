@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 /**
- * ShipFast — Lagos transport palette
+ * Eko Riders — Lagos transport palette
  * Soft danfo yellow + structural black. Warm cream neutrals.
  */
 const config: Config = {
@@ -123,9 +123,15 @@ const config: Config = {
         xl: ['1.25rem', { lineHeight: '1.75rem', letterSpacing: '-0.015em' }],
         '2xl': ['1.5rem', { lineHeight: '2rem', letterSpacing: '-0.02em' }],
         // Dominant data sizes
-        'data-sm': ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '0.02em' }],
+        'data-sm': [
+          '0.875rem',
+          { lineHeight: '1.25rem', letterSpacing: '0.02em' },
+        ],
         'data-md': ['1rem', { lineHeight: '1.5rem', letterSpacing: '0.01em' }],
-        'data-lg': ['1.125rem', { lineHeight: '1.5rem', letterSpacing: '0.005em' }],
+        'data-lg': [
+          '1.125rem',
+          { lineHeight: '1.5rem', letterSpacing: '0.005em' },
+        ],
       },
       minHeight: {
         touch: '2.75rem', // 44px

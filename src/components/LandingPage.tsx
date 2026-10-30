@@ -1,11 +1,4 @@
-import {
-  Truck,
-  Store,
-  MapPin,
-  LayoutGrid,
-  Package,
-  ArrowRight,
-} from 'lucide-react'
+import { Truck, Store, MapPin, LayoutGrid, ArrowRight } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 interface DemoCard {
@@ -116,12 +109,14 @@ export function LandingPage() {
       {/* Header */}
       <header className="border-b border-neutral-200 bg-white">
         <div className="mx-auto flex max-w-4xl items-center gap-3 px-5 py-5 sm:px-8 sm:py-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand shadow-sm">
-            <Package className="h-5 w-5 text-white" strokeWidth={2.5} />
-          </div>
+          <img
+            src="/icons/icon-512.png"
+            alt="Eko Riders"
+            className="h-10 w-10 rounded-xl shadow-sm object-cover"
+          />
           <div>
             <h1 className="font-heading text-xl font-black tracking-tight text-ink">
-              ShipFast
+              Eko Riders
             </h1>
             <p className="text-xs font-medium text-neutral-400">
               Last-mile delivery for Nigerian businesses

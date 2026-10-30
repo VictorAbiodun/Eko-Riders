@@ -1,5 +1,12 @@
 import { useState } from 'react'
-import { Home, Package, PlusCircle, CreditCard, Settings, User } from 'lucide-react'
+import {
+  Home,
+  Package,
+  PlusCircle,
+  CreditCard,
+  Settings,
+  User,
+} from 'lucide-react'
 import { ResponsiveShell } from '../shell/ResponsiveShell'
 import type { TabItem } from '../shell/TabBar'
 import { useAppData } from '../../context/AppContext'
@@ -26,14 +33,14 @@ export function SellerApp() {
   const mockSeller = sellers.find((s) => s.name === 'Adunni Okafor')
 
   const [activeTab, setActiveTab] = useState('home')
-  
+
   // Drill-down state for Order Details
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
 
   if (!mockSeller) return null
 
-  // If viewing a specific order detail, hide the shell/tabs and show detail full-screen on mobile, 
-  // or inside the shell on desktop? The prompt says "swap the bottom tab bar for a left sidebar nav". 
+  // If viewing a specific order detail, hide the shell/tabs and show detail full-screen on mobile,
+  // or inside the shell on desktop? The prompt says "swap the bottom tab bar for a left sidebar nav".
   // For simplicity, we can render SellerOrderDetail inside the shell.
   // Wait, in Rider app, Detail is full screen. Let's make it consistent, but for Seller, desktop sidebar is always visible.
   // We can just render the detail view inside the shell.
@@ -68,7 +75,11 @@ export function SellerApp() {
 
   return (
     <ResponsiveShell
-      title={selectedOrderId ? `Order ${selectedOrderId}` : titles[activeTab] ?? 'Dashboard'}
+      title={
+        selectedOrderId
+          ? `Order ${selectedOrderId}`
+          : (titles[activeTab] ?? 'Dashboard')
+      }
       tabs={SELLER_TABS}
       activeTab={selectedOrderId ? 'orders' : activeTab} // Keep orders active if drilling down
       onTabChange={(id) => {
@@ -91,23 +102,23 @@ export function SellerApp() {
               onSelectOrder={setSelectedOrderId}
             />
           )}
-          
+
           {activeTab === 'orders' && (
             <SellerOrders
               seller={mockSeller}
               onSelectOrder={setSelectedOrderId}
             />
           )}
-          
+
           {activeTab === 'create' && (
             <SellerCreateOrder
               seller={mockSeller}
               onSuccess={handleCreateOrderSuccess}
             />
           )}
-          
+
           {activeTab === 'payments' && <SellerPayments seller={mockSeller} />}
-          
+
           {activeTab === 'settings' && (
             <div className="p-4 md:p-8">
               <EmptyState

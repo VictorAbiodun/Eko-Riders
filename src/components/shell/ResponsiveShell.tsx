@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 import { AppHeader } from './AppHeader'
 import { TabBar, type TabItem } from './TabBar'
-import { Package } from 'lucide-react'
 
 interface ResponsiveShellProps {
   title: string
@@ -18,7 +17,7 @@ interface ResponsiveShellProps {
   /** Which tab gets the elevated center FAB treatment on mobile */
   centerTabId?: string
   children: ReactNode
-  
+
   // Sidebar specific
   sidebarHeader?: ReactNode
   sidebarFooter?: ReactNode
@@ -45,15 +44,17 @@ export function ResponsiveShell({
       <aside className="hidden w-64 flex-col border-r border-neutral-200 bg-white md:flex fixed inset-y-0 left-0 z-20">
         <div className="flex h-16 items-center px-6">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand">
-              <Package className="h-5 w-5 text-white" />
-            </div>
+            <img
+              src="/icons/icon-512.png"
+              alt="Eko Riders"
+              className="h-8 w-8 rounded-lg object-cover"
+            />
             <span className="font-heading text-xl font-black tracking-tight text-ink">
-              ShipFast
+              Eko Riders
             </span>
           </div>
         </div>
-        
+
         {sidebarHeader && <div className="px-6 py-4">{sidebarHeader}</div>}
 
         <nav className="flex-1 space-y-1 px-3 py-4">
@@ -84,9 +85,7 @@ export function ResponsiveShell({
         </nav>
 
         {sidebarFooter && (
-          <div className="border-t border-neutral-200 p-4">
-            {sidebarFooter}
-          </div>
+          <div className="border-t border-neutral-200 p-4">{sidebarFooter}</div>
         )}
       </aside>
 
@@ -140,10 +139,15 @@ export function ResponsiveShell({
 
         {/* Mobile Tab Bar */}
         <div className="md:hidden">
-          <TabBar tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} centerTabId={centerTabId} />
+          <TabBar
+            tabs={tabs}
+            activeTab={activeTab}
+            onTabChange={onTabChange}
+            centerTabId={centerTabId}
+          />
         </div>
       </div>
-      
+
       {/* Dynamic style for mobile padding */}
       <style>{`
         @media (min-width: 768px) {

@@ -1,4 +1,4 @@
-import { MapPin, Package, Banknote } from 'lucide-react'
+import { Package, Banknote } from 'lucide-react'
 import type { Order } from '../../data/types'
 import { formatNaira } from '../../data/mockData'
 

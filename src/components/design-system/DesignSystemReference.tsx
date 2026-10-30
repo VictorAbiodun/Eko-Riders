@@ -12,7 +12,9 @@ function Swatch({
 }) {
   return (
     <div className="flex items-center gap-3">
-      <div className={`h-10 w-10 shrink-0 rounded-lg border border-neutral-200 ${className}`} />
+      <div
+        className={`h-10 w-10 shrink-0 rounded-lg border border-neutral-200 ${className}`}
+      />
       <div>
         <p className="text-sm font-medium text-neutral-800">{label}</p>
         {hex && <p className="font-mono text-xs text-neutral-500">{hex}</p>}
@@ -21,7 +23,13 @@ function Swatch({
   )
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  title,
+  children,
+}: {
+  title: string
+  children: React.ReactNode
+}) {
   return (
     <section className="border-b border-neutral-200 px-4 py-6 last:border-b-0">
       <h2 className="mb-4 font-heading text-sm font-semibold uppercase tracking-wide text-neutral-500">
@@ -54,20 +62,54 @@ const NEUTRAL_SWATCHES = [
 ]
 
 const STATUS_SWATCHES = [
-  { label: 'Pending', text: 'text-status-pending', bg: 'bg-status-pending-bg', border: 'border-status-pending-border' },
-  { label: 'In transit (info)', text: 'text-status-info', bg: 'bg-status-info-bg', border: 'border-status-info-border' },
-  { label: 'Delivered (success)', text: 'text-status-success', bg: 'bg-status-success-bg', border: 'border-status-success-border' },
-  { label: 'Failed (danger)', text: 'text-status-danger', bg: 'bg-status-danger-bg', border: 'border-status-danger-border' },
-  { label: 'Returned (warning)', text: 'text-status-warning', bg: 'bg-status-warning-bg', border: 'border-status-warning-border' },
+  {
+    label: 'Pending',
+    text: 'text-status-pending',
+    bg: 'bg-status-pending-bg',
+    border: 'border-status-pending-border',
+  },
+  {
+    label: 'In transit (info)',
+    text: 'text-status-info',
+    bg: 'bg-status-info-bg',
+    border: 'border-status-info-border',
+  },
+  {
+    label: 'Delivered (success)',
+    text: 'text-status-success',
+    bg: 'bg-status-success-bg',
+    border: 'border-status-success-border',
+  },
+  {
+    label: 'Failed (danger)',
+    text: 'text-status-danger',
+    bg: 'bg-status-danger-bg',
+    border: 'border-status-danger-border',
+  },
+  {
+    label: 'Returned (warning)',
+    text: 'text-status-warning',
+    bg: 'bg-status-warning-bg',
+    border: 'border-status-warning-border',
+  },
 ]
 
 const TYPE_SAMPLES = [
   { cls: 'text-2xl font-heading font-bold', label: 'text-2xl — Page title' },
-  { cls: 'text-xl font-heading font-semibold', label: 'text-xl — Section heading' },
+  {
+    cls: 'text-xl font-heading font-semibold',
+    label: 'text-xl — Section heading',
+  },
   { cls: 'text-lg font-heading font-semibold', label: 'text-lg — Card title' },
   { cls: 'text-base font-body', label: 'text-base — Body default' },
-  { cls: 'text-sm font-body text-neutral-600', label: 'text-sm — Secondary text' },
-  { cls: 'text-xs font-body text-neutral-500', label: 'text-xs — Caption / meta' },
+  {
+    cls: 'text-sm font-body text-neutral-600',
+    label: 'text-sm — Secondary text',
+  },
+  {
+    cls: 'text-xs font-body text-neutral-500',
+    label: 'text-xs — Caption / meta',
+  },
 ]
 
 const SPACING_SAMPLES = [
@@ -96,7 +138,9 @@ export function DesignSystemReference() {
   return (
     <div className="bg-white">
       <div className="border-b border-neutral-200 px-4 py-5">
-        <p className="text-xs font-medium uppercase tracking-wide text-brand">ShipFast</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-brand">
+          Eko Riders
+        </p>
         <h2 className="mt-1 font-heading text-xl font-bold text-neutral-900">
           Design tokens
         </h2>
@@ -108,7 +152,12 @@ export function DesignSystemReference() {
       <Section title="Brand">
         <div className="space-y-3">
           {BRAND_SWATCHES.map((s) => (
-            <Swatch key={s.label} label={s.label} className={s.class} hex={s.hex} />
+            <Swatch
+              key={s.label}
+              label={s.label}
+              className={s.class}
+              hex={s.hex}
+            />
           ))}
         </div>
       </Section>
@@ -116,7 +165,12 @@ export function DesignSystemReference() {
       <Section title="Accent">
         <div className="space-y-3">
           {ACCENT_SWATCHES.map((s) => (
-            <Swatch key={s.label} label={s.label} className={s.class} hex={s.hex} />
+            <Swatch
+              key={s.label}
+              label={s.label}
+              className={s.class}
+              hex={s.hex}
+            />
           ))}
         </div>
       </Section>
@@ -124,7 +178,12 @@ export function DesignSystemReference() {
       <Section title="Neutrals">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {NEUTRAL_SWATCHES.map((s) => (
-            <Swatch key={s.label} label={s.label} className={s.class} hex={s.hex} />
+            <Swatch
+              key={s.label}
+              label={s.label}
+              className={s.class}
+              hex={s.hex}
+            />
           ))}
         </div>
       </Section>
@@ -153,7 +212,9 @@ export function DesignSystemReference() {
           {TYPE_SAMPLES.map((t) => (
             <div key={t.label}>
               <p className={t.cls}>The quick brown fox</p>
-              <p className="mt-0.5 font-mono text-xs text-neutral-400">{t.label}</p>
+              <p className="mt-0.5 font-mono text-xs text-neutral-400">
+                {t.label}
+              </p>
             </div>
           ))}
         </div>

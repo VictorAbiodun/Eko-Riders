@@ -11,8 +11,12 @@ export function OrderCard({ order }: OrderCardProps) {
     <li className="px-4 py-3.5">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-ink">{order.customerName}</p>
-          <p className="truncate text-sm text-neutral-600">{order.productDescription}</p>
+          <p className="truncate text-sm font-medium text-ink">
+            {order.customerName}
+          </p>
+          <p className="truncate text-sm text-neutral-600">
+            {order.productDescription}
+          </p>
         </div>
         <StatusBadge status={order.status} />
       </div>
@@ -32,7 +36,9 @@ export function OrderCard({ order }: OrderCardProps) {
         </div>
       </div>
 
-      <p className="mt-1.5 truncate text-sm text-neutral-500">{order.customerAddress}</p>
+      <p className="mt-1.5 truncate text-sm text-neutral-500">
+        {order.customerAddress}
+      </p>
     </li>
   )
 }

@@ -9,7 +9,8 @@ interface SellerOrdersProps {
   onSelectOrder: (orderId: string) => void
 }
 
-type FilterTab = 'ALL' | 'PENDING' | 'IN_TRANSIT' | 'DELIVERED' | 'FAILED' | 'RETURNED'
+type FilterTab =
+  'ALL' | 'PENDING' | 'IN_TRANSIT' | 'DELIVERED' | 'FAILED' | 'RETURNED'
 
 export function SellerOrders({ seller, onSelectOrder }: SellerOrdersProps) {
   const { orders } = useAppData()
@@ -17,12 +18,17 @@ export function SellerOrders({ seller, onSelectOrder }: SellerOrdersProps) {
 
   const sellerOrders = orders
     .filter((o) => o.sellerName === seller.businessName)
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )
 
   const filteredOrders = sellerOrders.filter((order) => {
     if (filter === 'ALL') return true
-    if (filter === 'PENDING') return ['NEW', 'CONFIRMED', 'ASSIGNED'].includes(order.status)
-    if (filter === 'IN_TRANSIT') return ['PICKED_UP', 'OUT_FOR_DELIVERY'].includes(order.status)
+    if (filter === 'PENDING')
+      return ['NEW', 'CONFIRMED', 'ASSIGNED'].includes(order.status)
+    if (filter === 'IN_TRANSIT')
+      return ['PICKED_UP', 'OUT_FOR_DELIVERY'].includes(order.status)
     return order.status === filter
   })
 
@@ -38,7 +44,9 @@ export function SellerOrders({ seller, onSelectOrder }: SellerOrdersProps) {
   return (
     <div className="flex h-full w-full flex-col bg-neutral-50 md:mx-auto md:max-w-6xl md:p-8">
       <div className="border-b border-neutral-200 bg-white px-4 py-4 md:hidden">
-        <h1 className="font-heading text-2xl font-bold tracking-tight text-ink">Orders</h1>
+        <h1 className="font-heading text-2xl font-bold tracking-tight text-ink">
+          Orders
+        </h1>
       </div>
 
       <div className="border-b border-neutral-200 bg-white px-4 py-3 md:rounded-t-xl md:border-x md:border-t">
