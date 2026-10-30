@@ -1,10 +1,10 @@
-# agent.md — Working instructions for AI coding agents
+# agent.md — Working instructions for AI coding agents (Eko Riders)
 
 This file tells any coding agent (Claude Code, Antigravity, Cursor, Copilot, etc.) how to work on this repo. Read it fully before changing code. The roadmap and task status live in `progress.md`; this file is the rulebook.
 
 ## 1. What this project is
 
-**ShipFast** (name may change, see `progress.md` decision 1) is a last-mile delivery platform for Lagos, Nigeria, built around one order ID. Four surfaces share one data model:
+**Eko Riders** (the demo UI still says "ShipFast"; renaming is a Phase 0 task) is a last-mile delivery platform for Lagos, Nigeria, built around one order ID. Four surfaces share one data model:
 
 | Surface | Route | Users | Folder |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Shared UI: `src/components/ui/`, `src/components/shell/`, `src/components/orders
 
 ## 2. Stack and commands
 
-React 19, TypeScript (strict), Vite 8, Tailwind CSS 4, lucide-react icons. No router, state library or test runner is installed yet; add them only as the roadmap calls for them.
+React 19, TypeScript (strict), Vite 8, Tailwind CSS 4, lucide-react icons. Decided services: **Supabase** (database, auth, realtime), **Paystack** (payments and payouts), **MapLibre GL JS + OpenFreeMap** (maps). The sign-up method is still open, see `progress.md` section 2. No router, state library or test runner is installed yet; add them only as the roadmap calls for them.
 
 ```bash
 npm ci              # install from the lockfile (never `npm install` to "fix" things)

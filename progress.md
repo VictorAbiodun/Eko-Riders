@@ -1,4 +1,4 @@
-# ShipFast — Road to a User-Ready Launch
+# Eko Riders — Road to a User-Ready Launch
 
 Last updated: 2026-10-30
 Owner: Victor
@@ -35,20 +35,36 @@ Legend: `[x]` done · `[ ]` to do · `[~]` partly done · **(decision)** needs V
 | Install | No manifest, no service worker, no icons beyond `favicon.svg` | Installable PWA |
 | Settings | Placeholder screens | Real profile and account settings |
 | Quality | `npm run build` fails on 12 unused-variable errors. No tests. No error handling or error boundary. Dead code in `App.tsx` (`AppContent`, design-system tabs). | Clean CI |
-| Repo | `.git` remote is `VictorAbiodun/Eko-Riders`, app is branded "ShipFast" | One name everywhere **(decision)** |
+| Repo | `.git` remote is `VictorAbiodun/Eko-Riders`, app UI is still branded "ShipFast" | Rename UI to Eko Riders |
 
 ---
 
-## 2. Decisions needed from Victor (nothing blocks Phase 0)
+## 2. Decisions
 
-1. **Product name and domain.** Repo says Eko-Riders, UI says ShipFast. Pick one, then register the domain.
-2. **Backend.** Recommended: **Supabase** (Postgres, Auth, Realtime, Storage, Row Level Security). It is the fastest route to multi-user and fits a frontend-led build. Alternative: Node API + Postgres if you want to own the whole stack.
-3. **Who signs up, and how?** Recommended: phone number + OTP for sellers, riders and customers (most Nigerians use phone, not email), email + password + 2FA for admins. Admin and rider accounts are invite-only.
-4. **Payments.** Nigerian options: Paystack, Flutterwave, Monnify. Pick one for (a) card or transfer payment of delivery fees and (b) payouts to sellers and riders. Cash on delivery is the main flow today, so decide whether v1 also takes online payment or only records COD.
-5. **Maps.** Google Maps (best Nigerian coverage, paid) vs Mapbox vs OpenStreetMap with MapLibre (free, weaker address search). Affects cost per delivery.
-6. **Distribution.** Recommended: **PWA first** (people install from the browser, no store review). Wrap for Google Play later if riders need it.
-7. **Pilot scope.** Recommended: one zone (e.g. Lekki/Yaba), 3–5 sellers, 5–10 riders, one ops person, for 2–4 weeks before public launch.
-8. **Legal.** Company registration, terms of service, privacy policy, and compliance with the Nigeria Data Protection Act (NDPA) 2023. Get a lawyer to review the terms and the COD liability wording.
+Decided 2026-10-30:
+
+| Topic | Decision | Notes |
+|---|---|---|
+| Product name | **Eko Riders** | The demo UI still says "ShipFast"; renaming is a Phase 0 task |
+| Backend | **Supabase** | Postgres, Auth, Realtime, Storage, Row Level Security. Separate staging and production projects |
+| Payments | **Paystack** (picked for ease of use) | No setup or monthly fee. Pays only when money moves: local cards and transfers cost 1.5% + ₦100 (the ₦100 is waived under ₦2,500, fee capped at ₦2,000); payouts cost ₦10 (up to ₦5,000), ₦25 (₦5,001–₦50,000), ₦50 (above that). Source: paystack.com/pricing, checked 2026-10-30. "Free" means free to start, not free per transaction |
+| Maps | **MapLibre GL JS** (open source) with **OpenFreeMap** tiles over OpenStreetMap data | No API key, no bill. OpenFreeMap says its public service is "as-is" with no guarantee, so keep the tile URL in config and plan to self-host or switch if usage grows. Address entry in v1 is pin-drop plus a typed landmark, with no paid geocoder |
+
+Still open:
+
+| Topic | Status |
+|---|---|
+| Sign-up method | **Open.** Victor chose Firebase. Concerns found on 2026-10-30: Firebase phone SMS is not on the free Spark plan (needs the pay-as-you-go Blaze plan with a billing card); it adds a second auth system next to Supabase; and the Supabase article I read described Firebase support as early access, so check the current Supabase docs before relying on it. Recommended: Supabase Auth for v1, with phone OTP added through Supabase's Send SMS hook and a Nigerian SMS provider. Awaiting Victor's confirmation |
+| Pilot zone | **Open.** Choose where 3–5 sellers and 5–10 riders Victor can personally recruit are already close together, so that deliveries are short and he can visit in person. If there is no obvious answer, default to Yaba and its neighbours (Surulere, Akoka): dense, mainland, many small sellers |
+| Legal documents | **Open, explained below.** Needed before the pilot, not before Phase 0 |
+
+### What "legal documents" means here
+These are the written rules that protect Eko Riders and its users. For this app:
+1. **Terms of Service**: what Eko Riders does and does not promise. Who pays when a parcel is lost or damaged, how COD cash is held and paid out, what happens on a failed delivery, delivery and return fees, when an account can be suspended.
+2. **Privacy Policy**: what personal data the app collects (phone numbers, addresses, rider location), why, who can see it, how long it is kept, and how someone asks for it to be deleted. Nigeria's Data Protection Act 2023 expects this.
+3. **Rider agreement and seller agreement**: one page each. Riders are usually independent contractors with duties for handling cash and parcels; sellers agree to packaging, prohibited items and COD rules.
+
+Victor is not a lawyer and neither is this document: draft all four, then have a Nigerian lawyer review them before real users sign up. Paystack will also ask for business details to approve a live account, so check their current requirements and whether the business needs CAC registration.
 
 ---
 
@@ -61,7 +77,7 @@ Work in order. Each phase ends in something you can demo. Do not start a phase u
 - [ ] Fix the 12 `noUnusedLocals` errors so `npm run build` passes
 - [ ] Delete dead code in `App.tsx` (`AppContent`, `OrdersPreview`, `ShellDemo`, `SettingsPlaceholder`) or move it to a `/dev/design-system` route that is excluded from production
 - [ ] Remove the ngrok host from `vite.config.ts`, or move it to `.env.local`
-- [ ] Pick the name and apply it everywhere (`package.json`, `index.html` title, header, repo)
+- [ ] Rename ShipFast to **Eko Riders** everywhere (`package.json` name, `index.html` title, headers, landing page, loader copy, README)
 - [ ] Add scripts: `typecheck`, `test`; add a GitHub Actions workflow that runs `lint`, `typecheck`, `build`
 - [ ] Add `.env.example`; confirm `.env*` is gitignored
 - [ ] Add Prettier or Oxlint format rules so diffs stay small
@@ -72,7 +88,7 @@ Work in order. Each phase ends in something you can demo. Do not start a phase u
 - [ ] Create the Supabase project (separate **staging** and **production** projects)
 - [ ] Design and migrate the schema (see section 4); keep migrations in `supabase/migrations/` under version control
 - [ ] Turn on Row Level Security for **every** table before any data goes in
-- [ ] Auth: phone OTP via a Nigerian SMS provider (Termii or similar) for sellers, riders, customers; email + password + 2FA for admins
+- [ ] Auth: **method pending Victor's confirmation (see section 2)**. Plan A: Supabase Auth, phone OTP through the Send SMS hook and a Nigerian SMS provider (Termii or similar) for sellers and riders; email + password + 2FA for admins
 - [ ] Roles: `admin`, `ops`, `seller`, `rider`. Roles live in a server-side table, never in client-editable metadata
 - [ ] Invite flow for riders and admins; seller self-signup with admin approval
 - [ ] Seed script that loads the current mock data into **staging only**
@@ -97,8 +113,8 @@ Work in order. Each phase ends in something you can demo. Do not start a phase u
 ### Phase 3 — Realtime, maps and notifications (about 1–2 weeks)
 - [ ] Realtime subscriptions for order status and rider assignment
 - [ ] Rider location: opt-in, foreground sharing only at first, throttled (every 10–15 s while on delivery), stops when the order ends. Explain it clearly in-app
-- [ ] Real map on tracking and rider screens replacing `MapGraphic` (keep the SVG as a loading fallback)
-- [ ] Address entry with autocomplete limited to Nigeria; store coordinates and the written address
+- [ ] Real map (MapLibre GL JS + OpenFreeMap tiles) on tracking and rider screens replacing `MapGraphic` (keep the SVG as a loading fallback)
+- [ ] Address entry: map pin-drop plus a typed landmark; store coordinates and the written address. Add geocoding later only if the pilot shows it is needed (public OSM geocoders restrict heavy use, so check their policy first)
 - [ ] Notifications: SMS and/or WhatsApp to customers on assigned, out for delivery, delivered, failed (Termii, Twilio or WhatsApp Business API). Web push for riders and sellers once installed
 - [ ] Click-to-call and WhatsApp deep links using the real rider and customer numbers
 - [ ] Rate limiting on OTP requests and on the public tracking endpoint
@@ -235,4 +251,5 @@ Current TypeScript types map onto this: `Order`, `Seller`, `Rider`, `Customer`, 
 
 ## 7. Change log
 
+- 2026-10-30: Decisions recorded: name Eko Riders, Supabase, Paystack, MapLibre + OpenFreeMap. Sign-up method, pilot zone and legal documents still open.
 - 2026-10-30: Audited the codebase and wrote this roadmap. Fixed the broken JSX fragment in `AdminRiders.tsx`; local branch `claude/admin-empty-states-build-fix` is committed but not yet pushed.
