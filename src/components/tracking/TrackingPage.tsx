@@ -61,7 +61,7 @@ function TrackingHeader() {
           <Package className="h-4 w-4 text-white" strokeWidth={2.5} />
         </div>
         <span className="font-heading text-base font-bold tracking-tight text-ink">
-          ShipFast
+          Eko Riders
         </span>
       </div>
     </header>
@@ -130,7 +130,7 @@ function TrackingFooter() {
     <footer className="border-t border-neutral-100 px-5 py-6 text-center">
       <p className="text-xs text-neutral-400">
         Powered by{' '}
-        <span className="font-semibold text-neutral-500">ShipFast</span>
+        <span className="font-semibold text-neutral-500">Eko Riders</span>
       </p>
       <p className="mt-0.5 text-xs text-neutral-400">
         Last-mile delivery for Nigerian businesses

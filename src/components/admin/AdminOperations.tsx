@@ -209,7 +209,6 @@ export function AdminOperations({ onNavigate, onSelectOrder }: AdminOperationsPr
   const failed = orders.filter((o) => o.status === 'FAILED').length
   const returned = orders.filter((o) => o.status === 'RETURNED').length
   const activeRiders = riders.filter((r) => r.status !== 'offline').length
-  const availableRiders = riders.filter((r) => r.status === 'available').length
 
   // COD totals
   const codCollected = orders

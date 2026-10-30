@@ -122,12 +122,10 @@ Ask Victor before you:
 - add a feature that is not in `progress.md`
 - touch legal text (terms, privacy policy)
 
-## 11. Known issues to clear first (Phase 0)
+## 11. Known gaps (see `progress.md` for the plan)
 
-- 12 unused-variable type errors break `npm run build`: `AppContent` in `App.tsx`; `availableRiders` in `AdminOperations.tsx`; `OrderStatus` in `AdminOrders.tsx`; all imports in `AdminReturns.tsx`; `User`, `CheckCircle2`, `XCircle`, `Clock` in `AdminRiders.tsx`; `Store`, `Seller` in `AdminSellers.tsx`; `User` in `RiderDeliveryDetail.tsx`; `MapPin` in `OrderSummaryCard.tsx`.
 - `SellerApp.tsx` and `RiderApp.tsx` hardcode a mock login.
 - `RiderDeliveryDetail.tsx` has a hardcoded `tel:+2348000000000`.
 - `SellerPayments.tsx` settles with a hardcoded `− 5000`; `RiderEarnings.tsx` hardcodes ₦800 per delivery and a ₦3,000 bonus.
 - `TrackingPage.tsx` shows a picker of hardcoded demo order IDs.
-- `vite.config.ts` contains a personal ngrok host in `allowedHosts`.
 - `index.html` has only a title and a theme colour: no description, manifest or icons.

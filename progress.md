@@ -34,7 +34,7 @@ Legend: `[x]` done · `[ ]` to do · `[~]` partly done · **(decision)** needs V
 | Routing | Home-made `pathname` check in `App.tsx`, links do full page loads | A router, plus host rewrites so deep links work |
 | Install | No manifest, no service worker, no icons beyond `favicon.svg` | Installable PWA |
 | Settings | Placeholder screens | Real profile and account settings |
-| Quality | `npm run build` fails on 12 unused-variable errors. No tests. No error handling or error boundary. Dead code in `App.tsx` (`AppContent`, design-system tabs). | Clean CI |
+| Quality | Build, typecheck and lint pass (lint has 4 non-blocking warnings). No tests. No error handling or error boundary. | Tests, error handling |
 | Repo | `.git` remote is `VictorAbiodun/Eko-Riders`, app UI is still branded "ShipFast" | Rename UI to Eko Riders |
 
 ---
@@ -74,15 +74,15 @@ Work in order. Each phase ends in something you can demo. Do not start a phase u
 
 ### Phase 0 — Clean foundation (about 1 day)
 - [ ] Push the local branch `claude/admin-empty-states-build-fix` to the repo (needs GitHub access; see agent.md)
-- [ ] Fix the 12 `noUnusedLocals` errors so `npm run build` passes
-- [ ] Delete dead code in `App.tsx` (`AppContent`, `OrdersPreview`, `ShellDemo`, `SettingsPlaceholder`) or move it to a `/dev/design-system` route that is excluded from production
-- [ ] Remove the ngrok host from `vite.config.ts`, or move it to `.env.local`
-- [ ] Rename ShipFast to **Eko Riders** everywhere (`package.json` name, `index.html` title, headers, landing page, loader copy, README)
-- [ ] Add scripts: `typecheck`, `test`; add a GitHub Actions workflow that runs `lint`, `typecheck`, `build`
-- [ ] Add `.env.example`; confirm `.env*` is gitignored
+- [x] Fix the 12 `noUnusedLocals` errors so `npm run build` passes (done 2026-10-30)
+- [x] Delete dead code in `App.tsx`; the token reference now lives at `/dev/design-system`, development builds only (done)
+- [x] Remove the ngrok host from `vite.config.ts`; a tunnel host can be set with `DEV_ALLOWED_HOST` (done)
+- [x] Rename ShipFast to **Eko Riders** everywhere (done; the demo's localStorage key is now `eko_riders_demo_orders`, so saved demo orders reset once) (`package.json` name, `index.html` title, headers, landing page, loader copy, README)
+- [~] Added `typecheck` script and `.github/workflows/ci.yml` (lint, typecheck, build). The `test` script waits for the test runner in Phase 6
+- [x] Added `.env.example`; `.env*` is gitignored except the example
 - [ ] Add Prettier or Oxlint format rules so diffs stay small
 
-**Exit:** green CI on every push.
+**Exit:** green CI on every push. Local build, typecheck and lint are green; CI itself runs once the branch is pushed. Still open in this phase: pushing the branch (needs repo access) and the formatter.
 
 ### Phase 1 — Backend, data model and auth (about 1 week)
 - [ ] Create the Supabase project (separate **staging** and **production** projects)
@@ -251,6 +251,7 @@ Current TypeScript types map onto this: `Order`, `Seller`, `Rider`, `Customer`, 
 
 ## 7. Change log
 
+- 2026-10-30: Phase 0 done locally: renamed to Eko Riders, build errors cleared, dead code removed, ngrok host removed, `.env.example`, CI workflow and README added. Smoke-tested all routes at 360 px with no console errors.
 - 2026-10-30: Sign-up decided: Supabase Auth. Pilot zone decided: Ikeja.
 - 2026-10-30: Decisions recorded: name Eko Riders, Supabase, Paystack, MapLibre + OpenFreeMap. Legal documents still open.
 - 2026-10-30: Audited the codebase and wrote this roadmap. Fixed the broken JSX fragment in `AdminRiders.tsx`; local branch `claude/admin-empty-states-build-fix` is committed but not yet pushed.

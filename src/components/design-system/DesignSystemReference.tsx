@@ -96,7 +96,7 @@ export function DesignSystemReference() {
   return (
     <div className="bg-white">
       <div className="border-b border-neutral-200 px-4 py-5">
-        <p className="text-xs font-medium uppercase tracking-wide text-brand">ShipFast</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-brand">Eko Riders</p>
         <h2 className="mt-1 font-heading text-xl font-bold text-neutral-900">
           Design tokens
         </h2>

@@ -121,7 +121,7 @@ export function LandingPage() {
           </div>
           <div>
             <h1 className="font-heading text-xl font-black tracking-tight text-ink">
-              ShipFast
+              Eko Riders
             </h1>
             <p className="text-xs font-medium text-neutral-400">
               Last-mile delivery for Nigerian businesses

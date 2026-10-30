@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { RotateCcw, ArrowLeft, Package, CheckCircle2, Clock, AlertTriangle } from 'lucide-react'
 import { useAppData } from '../../context/AppContext'
 import { EmptyState } from '../ui/EmptyState'
 

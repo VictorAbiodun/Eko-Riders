@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { User, Phone, MapPin, Bike as BikeIcon, CheckCircle2, XCircle, Clock } from 'lucide-react'
+import { Phone, MapPin, Bike as BikeIcon } from 'lucide-react'
 import { useAppData } from '../../context/AppContext'
 import { EmptyState } from '../ui/EmptyState'
 import type { Rider } from '../../data/types'

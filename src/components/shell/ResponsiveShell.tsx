@@ -49,7 +49,7 @@ export function ResponsiveShell({
               <Package className="h-5 w-5 text-white" />
             </div>
             <span className="font-heading text-xl font-black tracking-tight text-ink">
-              ShipFast
+              Eko Riders
             </span>
           </div>
         </div>

@@ -11,7 +11,7 @@ interface AppContextValue {
 
 const AppContext = createContext<AppContextValue | null>(null)
 
-const STORAGE_KEY = 'shipfast_demo_orders'
+const STORAGE_KEY = 'eko_riders_demo_orders'
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<Order[]>(() => {

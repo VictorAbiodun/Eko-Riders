@@ -52,7 +52,7 @@ export function AdminApp() {
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold text-ink">Ops Admin</p>
-        <p className="truncate text-xs text-neutral-500">admin@shipfast.ng</p>
+        <p className="truncate text-xs text-neutral-500">admin@ekoriders.ng</p>
       </div>
     </div>
   )

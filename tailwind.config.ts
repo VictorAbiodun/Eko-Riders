@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 /**
- * ShipFast — Lagos transport palette
+ * Eko Riders — Lagos transport palette
  * Soft danfo yellow + structural black. Warm cream neutrals.
  */
 const config: Config = {

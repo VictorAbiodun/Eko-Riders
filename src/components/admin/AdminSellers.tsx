@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { Store, MapPin, Package } from 'lucide-react'
+import { MapPin, Package } from 'lucide-react'
 import { useAppData } from '../../context/AppContext'
-import type { Seller } from '../../data/types'
 
 const PLAN_COLORS: Record<string, string> = {
   starter: 'bg-neutral-500 text-white',
