@@ -62,17 +62,23 @@ export default function App() {
 }
 
 function AppContent({ path }: { path: string }) {
-  // /login → dedicated authentication page
-  if (path.startsWith('/login')) {
-    const roleParam = path.startsWith('/login/rider')
+  // /login, /signup, /register → dedicated authentication page
+  if (
+    path.startsWith('/login') ||
+    path.startsWith('/signup') ||
+    path.startsWith('/register')
+  ) {
+    const isSignup = path.startsWith('/signup') || path.startsWith('/register')
+    const roleParam = path.includes('/rider')
       ? 'rider'
-      : path.startsWith('/login/admin')
+      : path.includes('/admin')
         ? 'admin'
         : 'seller'
 
     return (
       <LoginPage
         initialRole={roleParam}
+        initialMode={isSignup ? 'signup' : 'signin'}
         onCancel={() => {
           navigate('/')
         }}

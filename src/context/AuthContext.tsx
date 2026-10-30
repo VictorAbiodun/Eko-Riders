@@ -14,6 +14,17 @@ type ProfileRow = Database['public']['Tables']['profiles']['Row']
 type SellerRow = Database['public']['Tables']['sellers']['Row']
 type RiderRow = Database['public']['Tables']['riders']['Row']
 
+export interface SignUpParams {
+  email: string
+  password: string
+  fullName: string
+  phone: string
+  role: 'seller' | 'rider'
+  businessName?: string
+  area?: string
+  vehicleType?: 'bike' | 'bicycle' | 'van'
+}
+
 interface AuthContextValue {
   user: User | null
   session: Session | null
@@ -27,6 +38,9 @@ interface AuthContextValue {
     email: string,
     password: string,
   ) => Promise<{ error: Error | null }>
+  signUpWithEmail: (
+    params: SignUpParams,
+  ) => Promise<{ error: Error | null; needsEmailConfirmation?: boolean }>
   signInDemo: (demoRole: UserRole, name: string, email: string) => void
   signOut: () => Promise<void>
 }
@@ -153,6 +167,74 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: null }
   }
 
+  const signUpWithEmail = async (params: SignUpParams) => {
+    setError(null)
+    if (!supabase) {
+      return { error: new Error('Supabase is not configured') }
+    }
+
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email: params.email,
+      password: params.password,
+      options: {
+        data: {
+          full_name: params.fullName,
+          phone: params.phone,
+          role: params.role,
+          business_name: params.businessName || `${params.fullName}'s Business`,
+          area: params.area || 'Ikeja',
+          vehicle_type: params.vehicleType || 'bike',
+        },
+      },
+    })
+
+    if (signUpError) {
+      setError(signUpError.message)
+      return { error: signUpError }
+    }
+
+    if (data.user) {
+      // Direct client upsert backup in case DB trigger is not yet active
+      try {
+        await supabase.from('profiles').upsert({
+          id: data.user.id,
+          role: params.role,
+          full_name: params.fullName,
+          phone: params.phone,
+          status: 'active',
+        })
+
+        if (params.role === 'seller') {
+          await supabase.from('sellers').upsert({
+            profile_id: data.user.id,
+            business_name:
+              params.businessName || `${params.fullName}'s Business`,
+            phone: params.phone,
+            area: params.area || 'Ikeja',
+          })
+        } else if (params.role === 'rider') {
+          await supabase.from('riders').upsert({
+            profile_id: data.user.id,
+            vehicle_type: params.vehicleType || 'bike',
+            status: 'available',
+            current_zone: params.area || 'Ikeja',
+          })
+        }
+      } catch {
+        // Handled by Postgres trigger if client RLS restricts insert
+      }
+
+      if (data.session) {
+        await fetchProfileData(data.user.id)
+        return { error: null, needsEmailConfirmation: false }
+      } else {
+        return { error: null, needsEmailConfirmation: true }
+      }
+    }
+
+    return { error: null }
+  }
+
   const signInDemo = (demoRole: UserRole, name: string, email: string) => {
     const demoId =
       demoRole === 'admin'
@@ -235,6 +317,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         error,
         signInWithEmail,
+        signUpWithEmail,
         signInDemo,
         signOut,
       }}

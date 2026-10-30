@@ -162,16 +162,28 @@ export function LandingPage() {
                 </button>
               </div>
             ) : (
-              <a
-                href="/login"
-                onClick={(e) => {
-                  e.preventDefault()
-                  navigate('/login')
-                }}
-                className="flex min-h-touch items-center gap-1.5 rounded-xl border border-neutral-300 bg-white px-3.5 text-xs font-bold text-ink shadow-2xs transition-colors hover:border-brand hover:bg-neutral-50"
-              >
-                Sign in
-              </a>
+              <div className="flex items-center gap-2">
+                <a
+                  href="/login"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    navigate('/login')
+                  }}
+                  className="flex min-h-touch items-center gap-1.5 rounded-xl border border-neutral-300 bg-white px-3 text-xs font-bold text-ink shadow-2xs transition-colors hover:border-brand hover:bg-neutral-50"
+                >
+                  Sign in
+                </a>
+                <a
+                  href="/signup"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    navigate('/signup')
+                  }}
+                  className="flex min-h-touch items-center gap-1.5 rounded-xl bg-brand px-3 text-xs font-bold text-ink shadow-2xs transition-colors hover:bg-brand-600"
+                >
+                  Create account
+                </a>
+              </div>
             )}
           </div>
         </div>
