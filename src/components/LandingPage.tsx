@@ -80,6 +80,15 @@ export function LandingPage() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
+                  onClick={() => navigate('/login/admin')}
+                  className="hidden sm:flex min-h-touch items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-3 text-xs font-semibold text-neutral-600 shadow-2xs transition-colors hover:border-neutral-300 hover:text-ink"
+                  title="Dispatcher & Admin Portal"
+                >
+                  <Shield className="h-3.5 w-3.5 text-brand" />
+                  <span>Admin</span>
+                </button>
+                <button
+                  type="button"
                   onClick={() => navigate('/login')}
                   className="flex min-h-touch items-center gap-1.5 rounded-xl border border-neutral-300 bg-white px-3.5 text-xs font-bold text-ink shadow-2xs transition-colors hover:border-brand hover:bg-neutral-50"
                 >
@@ -377,9 +386,18 @@ export function LandingPage() {
             </span>
           </div>
 
-          <p className="text-xs text-neutral-500">
-            Pilot Zone: Ikeja, Lagos · Same-day delivery across Lagos State
-          </p>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-neutral-500 sm:justify-end">
+            <button
+              type="button"
+              onClick={() => navigate('/admin')}
+              className="inline-flex items-center gap-1 font-semibold text-neutral-500 hover:text-ink hover:underline transition-colors"
+            >
+              <Shield className="h-3 w-3 text-brand" />
+              <span>Admin & Operations Portal</span>
+            </button>
+            <span className="hidden sm:inline text-neutral-300">•</span>
+            <span>Pilot Zone: Ikeja, Lagos</span>
+          </div>
         </div>
       </footer>
     </div>

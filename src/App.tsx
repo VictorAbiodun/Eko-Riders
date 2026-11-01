@@ -82,12 +82,13 @@ function AppContent({ path }: { path: string }) {
         onCancel={() => {
           navigate('/')
         }}
-        onSuccess={() => {
+        onSuccess={(detectedRole) => {
+          const role = detectedRole || roleParam
           const target =
-            roleParam === 'rider'
-              ? '/rider'
-              : roleParam === 'admin'
-                ? '/admin'
+            role === 'admin' || role === 'ops'
+              ? '/admin'
+              : role === 'rider'
+                ? '/rider'
                 : '/seller'
           navigate(target)
         }}

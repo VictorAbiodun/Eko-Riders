@@ -19,7 +19,7 @@ export interface SignUpParams {
   password: string
   fullName: string
   phone: string
-  role: 'seller' | 'rider'
+  role: 'seller' | 'rider' | 'admin'
   businessName?: string
   area?: string
   vehicleType?: 'bike' | 'bicycle' | 'van'

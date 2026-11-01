@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useAuth } from '../../context/AuthContext'
+import { supabase } from '../../lib/supabase'
 import {
   Lock,
   Mail,
@@ -12,13 +13,15 @@ import {
   Phone,
   Building2,
   MapPin,
+  Shield,
+  KeyRound,
 } from 'lucide-react'
 import type { UserRole } from '../../data/database.types'
 
 interface LoginPageProps {
   initialRole?: UserRole
   initialMode?: 'signin' | 'signup'
-  onSuccess?: () => void
+  onSuccess?: (role?: UserRole) => void
   onCancel?: () => void
 }
 
@@ -46,8 +49,8 @@ export function LoginPage({
   const { signInWithEmail, signUpWithEmail, error: authError } = useAuth()
 
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode)
-  const [selectedRole, setSelectedRole] = useState<'seller' | 'rider'>(
-    initialRole === 'rider' ? 'rider' : 'seller',
+  const [selectedRole, setSelectedRole] = useState<'seller' | 'rider' | 'admin'>(
+    initialRole === 'admin' ? 'admin' : initialRole === 'rider' ? 'rider' : 'seller',
   )
 
   // Auth fields
@@ -62,12 +65,13 @@ export function LoginPage({
   const [vehicleType, setVehicleType] = useState<'bike' | 'bicycle' | 'van'>(
     'bike',
   )
+  const [adminPasskey, setAdminPasskey] = useState('')
 
   const [loading, setLoading] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
-  const handleRoleSelect = (role: 'seller' | 'rider') => {
+  const handleRoleSelect = (role: 'seller' | 'rider' | 'admin') => {
     setSelectedRole(role)
     setLocalError(null)
     setSuccessMessage(null)
@@ -108,15 +112,27 @@ export function LoginPage({
         return
       }
 
+      // Admin verification check
+      if (selectedRole === 'admin') {
+        const cleanKey = adminPasskey.trim().toUpperCase()
+        if (cleanKey !== 'EKO-ADMIN-2026') {
+          setLocalError(
+            'Invalid Admin Passkey. Please enter the master authorization key (EKO-ADMIN-2026).',
+          )
+          setLoading(false)
+          return
+        }
+      }
+
       const { error, needsEmailConfirmation } = await signUpWithEmail({
         email: email.trim(),
         password,
         fullName: fullName.trim(),
         phone: phone.trim(),
         role: selectedRole,
-        businessName: businessName.trim() || undefined,
-        area,
-        vehicleType,
+        businessName: selectedRole === 'seller' ? businessName.trim() || undefined : undefined,
+        area: selectedRole === 'seller' || selectedRole === 'rider' ? area : undefined,
+        vehicleType: selectedRole === 'rider' ? vehicleType : undefined,
       })
 
       setLoading(false)
@@ -137,7 +153,7 @@ export function LoginPage({
           'Account created! Please check your email inbox to confirm your account and sign in.',
         )
       } else {
-        onSuccess?.()
+        onSuccess?.(selectedRole)
       }
     } else {
       // Sign In mode
@@ -147,7 +163,26 @@ export function LoginPage({
       if (error) {
         setLocalError(error.message)
       } else {
-        onSuccess?.()
+        // Query the profile's registered role in Supabase
+        let detectedRole: UserRole = selectedRole
+        if (supabase) {
+          try {
+            const { data: { user } } = await supabase.auth.getUser()
+            if (user) {
+              const { data: pData } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', user.id)
+                .maybeSingle()
+              if (pData?.role) {
+                detectedRole = pData.role as UserRole
+              }
+            }
+          } catch {
+            // fallback to selectedRole
+          }
+        }
+        onSuccess?.(detectedRole)
       }
     }
   }
@@ -180,8 +215,12 @@ export function LoginPage({
             </h2>
             <p className="text-xs font-medium text-neutral-500">
               {mode === 'signin'
-                ? 'Sign in to your account'
-                : 'Create your account'}
+                ? selectedRole === 'admin'
+                  ? 'Operations & Dispatch Control'
+                  : 'Sign in to your account'
+                : selectedRole === 'admin'
+                  ? 'Create Administrator Account'
+                  : 'Create your account'}
             </p>
           </div>
         </div>
@@ -212,33 +251,46 @@ export function LoginPage({
           </button>
         </div>
 
-        {/* Role Pills (for Create Account mode) */}
-        {mode === 'signup' && (
-          <div className="mt-3 flex rounded-xl bg-neutral-200/50 p-1">
-            {(['seller', 'rider'] as const).map((r) => {
-              const isCurrent = selectedRole === r
-              const label = r === 'seller' ? 'Seller / SME' : 'Delivery Rider'
-              return (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => handleRoleSelect(r)}
-                  className={`flex-1 rounded-lg py-1.5 text-xs font-semibold tracking-wide transition-all ${
-                    isCurrent
-                      ? 'bg-white text-ink shadow-xs'
-                      : 'text-neutral-500 hover:text-neutral-900'
-                  }`}
-                >
-                  {label}
-                </button>
-              )
-            })}
-          </div>
-        )}
+        {/* Role Selector Tabs (Available in both Sign In and Sign Up) */}
+        <div className="mt-3 flex rounded-xl bg-neutral-200/60 p-1 gap-1">
+          {(
+            [
+              { id: 'seller', label: 'Seller / SME' },
+              { id: 'rider', label: 'Rider' },
+              { id: 'admin', label: 'Admin / Ops' },
+            ] as const
+          ).map((item) => {
+            const isCurrent = selectedRole === item.id
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => handleRoleSelect(item.id)}
+                className={`flex-1 rounded-lg py-1.5 text-xs font-semibold tracking-wide transition-all flex items-center justify-center gap-1 ${
+                  isCurrent
+                    ? 'bg-white text-ink shadow-xs font-bold'
+                    : 'text-neutral-500 hover:text-neutral-900'
+                }`}
+              >
+                {item.id === 'admin' && <Shield className="h-3 w-3 text-brand-700" />}
+                <span>{item.label}</span>
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-8">
+          {selectedRole === 'admin' && mode === 'signin' && (
+            <div className="mb-5 flex items-center gap-2.5 rounded-xl border border-brand/40 bg-brand-50/80 p-3 text-xs text-brand-950">
+              <Shield className="h-4 w-4 shrink-0 text-brand" />
+              <span>
+                Operations & Dispatcher sign in. Admins have oversight of all Lagos shipments.
+              </span>
+            </div>
+          )}
+
           {activeError && (
             <div className="mb-5 flex items-start gap-3 rounded-xl border border-status-danger-border bg-status-danger-bg p-3.5 text-sm text-status-danger">
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
@@ -254,6 +306,7 @@ export function LoginPage({
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Sign Up extra fields */}
             {mode === 'signup' && (
               <>
                 {/* Full Name */}
@@ -274,7 +327,7 @@ export function LoginPage({
                       required
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      placeholder="e.g. Chidinma Adeleke"
+                      placeholder="e.g. Oluwaseun Adeleke"
                       className="block w-full min-h-touch rounded-xl border border-neutral-300 bg-white pl-10 pr-3.5 text-sm text-ink placeholder-neutral-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all"
                     />
                   </div>
@@ -298,7 +351,7 @@ export function LoginPage({
                       required
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="0802 345 6789"
+                      placeholder="080 1234 5678"
                       className="block w-full min-h-touch rounded-xl border border-neutral-300 bg-white pl-10 pr-3.5 text-sm text-ink placeholder-neutral-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all"
                     />
                   </div>
@@ -329,34 +382,36 @@ export function LoginPage({
                   </div>
                 )}
 
-                {/* Location / Area in Lagos */}
-                <div>
-                  <label
-                    htmlFor="area"
-                    className="block text-xs font-semibold uppercase tracking-wider text-neutral-600"
-                  >
-                    {selectedRole === 'seller'
-                      ? 'Pickup Area in Lagos'
-                      : 'Primary Delivery Zone'}
-                  </label>
-                  <div className="relative mt-1.5">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-neutral-400">
-                      <MapPin className="h-4 w-4" />
-                    </div>
-                    <select
-                      id="area"
-                      value={area}
-                      onChange={(e) => setArea(e.target.value)}
-                      className="block w-full min-h-touch rounded-xl border border-neutral-300 bg-white pl-10 pr-3.5 text-sm text-ink focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all"
+                {/* Location / Area in Lagos (for sellers and riders) */}
+                {(selectedRole === 'seller' || selectedRole === 'rider') && (
+                  <div>
+                    <label
+                      htmlFor="area"
+                      className="block text-xs font-semibold uppercase tracking-wider text-neutral-600"
                     >
-                      {LAGOS_AREAS.map((a) => (
-                        <option key={a} value={a}>
-                          {a}
-                        </option>
-                      ))}
-                    </select>
+                      {selectedRole === 'seller'
+                        ? 'Pickup Area in Lagos'
+                        : 'Primary Delivery Zone'}
+                    </label>
+                    <div className="relative mt-1.5">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-neutral-400">
+                        <MapPin className="h-4 w-4" />
+                      </div>
+                      <select
+                        id="area"
+                        value={area}
+                        onChange={(e) => setArea(e.target.value)}
+                        className="block w-full min-h-touch rounded-xl border border-neutral-300 bg-white pl-10 pr-3.5 text-sm text-ink focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all"
+                      >
+                        {LAGOS_AREAS.map((a) => (
+                          <option key={a} value={a}>
+                            {a}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Rider Specific: Vehicle Type */}
                 {selectedRole === 'rider' && (
@@ -387,6 +442,38 @@ export function LoginPage({
                     </div>
                   </div>
                 )}
+
+                {/* Admin Specific: Admin Passkey */}
+                {selectedRole === 'admin' && (
+                  <div>
+                    <label
+                      htmlFor="adminPasskey"
+                      className="block text-xs font-semibold uppercase tracking-wider text-neutral-600"
+                    >
+                      Admin Authorization Passkey
+                    </label>
+                    <div className="relative mt-1.5">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-neutral-400">
+                        <KeyRound className="h-4 w-4" />
+                      </div>
+                      <input
+                        id="adminPasskey"
+                        type="password"
+                        required
+                        value={adminPasskey}
+                        onChange={(e) => setAdminPasskey(e.target.value)}
+                        placeholder="Enter master passkey"
+                        className="block w-full min-h-touch rounded-xl border border-neutral-300 bg-white pl-10 pr-3.5 text-sm text-ink placeholder-neutral-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all font-mono"
+                      />
+                    </div>
+                    <p className="mt-1.5 text-[11px] text-neutral-500">
+                      Authorization key for logistics staff:{' '}
+                      <code className="rounded bg-neutral-100 px-1.5 py-0.5 font-mono font-bold text-ink">
+                        EKO-ADMIN-2026
+                      </code>
+                    </p>
+                  </div>
+                )}
               </>
             )}
 
@@ -405,11 +492,14 @@ export function LoginPage({
                 <input
                   id="email"
                   type="email"
-                  autoComplete="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your.email@example.com"
+                  placeholder={
+                    selectedRole === 'admin'
+                      ? 'admin@ekoriders.ng'
+                      : 'you@domain.com'
+                  }
                   className="block w-full min-h-touch rounded-xl border border-neutral-300 bg-white pl-10 pr-3.5 text-sm text-ink placeholder-neutral-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all"
                 />
               </div>
@@ -430,42 +520,36 @@ export function LoginPage({
                 <input
                   id="password"
                   type="password"
-                  autoComplete={
-                    mode === 'signup' ? 'new-password' : 'current-password'
-                  }
                   required
-                  minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className="block w-full min-h-touch rounded-xl border border-neutral-300 bg-white pl-10 pr-3.5 text-sm text-ink placeholder-neutral-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all"
                 />
               </div>
-              {mode === 'signup' && (
-                <p className="mt-1 text-[11px] text-neutral-400">
-                  Must be at least 6 characters
-                </p>
-              )}
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="mt-3 flex w-full min-h-touch items-center justify-center gap-2 rounded-xl bg-brand px-4 text-sm font-bold text-ink shadow-sm transition-all hover:bg-brand-600 active:scale-[0.98] disabled:opacity-50"
+              className="mt-6 flex w-full min-h-touch items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3 text-sm font-bold text-ink shadow-xs transition-all hover:bg-brand-600 active:scale-[0.99] disabled:opacity-50"
             >
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>
-                    {mode === 'signup' ? 'Creating account…' : 'Signing in…'}
-                  </span>
+                  <span>Processing...</span>
                 </>
               ) : (
                 <>
                   <span>
-                    {mode === 'signup'
-                      ? 'Create Eko Riders Account'
-                      : 'Sign In'}
+                    {mode === 'signin'
+                      ? selectedRole === 'admin'
+                        ? 'Enter Admin Portal'
+                        : 'Sign In'
+                      : selectedRole === 'admin'
+                        ? 'Create Admin Account'
+                        : 'Create Account'}
                   </span>
                   <ArrowRight className="h-4 w-4" />
                 </>
@@ -473,28 +557,28 @@ export function LoginPage({
             </button>
           </form>
 
-          {/* Mode Switch Helper */}
-          <div className="mt-5 text-center">
+          {/* Mode Switch Footnote */}
+          <div className="mt-6 text-center">
             {mode === 'signin' ? (
               <p className="text-xs text-neutral-500">
-                New to Eko Riders?{' '}
+                Don't have an account?{' '}
                 <button
                   type="button"
                   onClick={() => handleModeSwitch('signup')}
-                  className="font-bold text-brand hover:underline"
+                  className="font-bold text-ink underline hover:text-brand-800"
                 >
-                  Create an account
+                  Create one now
                 </button>
               </p>
             ) : (
               <p className="text-xs text-neutral-500">
-                Already have an account?{' '}
+                Already registered?{' '}
                 <button
                   type="button"
                   onClick={() => handleModeSwitch('signin')}
-                  className="font-bold text-brand hover:underline"
+                  className="font-bold text-ink underline hover:text-brand-800"
                 >
-                  Sign in
+                  Sign in instead
                 </button>
               </p>
             )}
